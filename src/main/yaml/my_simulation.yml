@@ -1,0 +1,61 @@
+variables:
+  random: &random
+    min: 0
+    max: 29
+    step: 1
+    default: 2
+  commRadius: &commRadius
+    min: 35
+    max: 55
+    step: 15.0
+    default: 50.0
+              
+export:
+  - time
+
+seeds:
+  scenario: *random
+  simulation: *random
+  
+incarnation: scafi
+
+pools:
+  - pool: &program
+    - time-distribution:
+        type: ExponentialTime
+        parameters: [1]
+      type: Event
+      actions:
+        - type: RunScafiProgram
+          parameters: [it.unibo.simulations.MyAggregateProgram, 20]
+  - pool: &contents
+    - molecule: grain
+      concentration: 10
+  - pool: &move
+    - time-distribution:
+        type: ExponentialTime
+        parameters: [1,2] # rate, initial time
+      type: Event
+      actions:
+      - type: MoveToTarget
+        parameters: ["move_to", 2]
+
+environment:
+  type: OSMEnvironment
+  parameters: [cesena.pbf, false, false]
+#  -b=12.24045,44.13541,12.24851,44.13886
+
+positions:
+  type: LatLongPosition
+
+network-model:
+  type: ConnectWithinDistance
+  parameters: [*commRadius]
+
+displacements:
+  - in:
+      type: Rectangle #GeometricGradientRectangle
+      parameters: [200, 44.13621, 12.24045, 0.00345, 0.00706] #[250, 44.13621, 12.24045, 0.00345, 0.00706, 1.2, false, false]
+    programs:
+      - *program
+    contents: *contents
