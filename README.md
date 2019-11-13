@@ -1,36 +1,66 @@
-# Learning Scafi-Alchemist simulations
+# Learning simulations with ScaFi-Alchemist
 
-## How-to: basics
+* ScaFi is an aggregate programming framework
+* Alchemist is a (meta-)simulator
 
-### Project layouts
+## Alchemist
 
-- `src/main/scala` contains code for simulation logic (aggregate programs in scafi)
-- `src/main/yaml` contains simulation descriptors
+### Conceptual model
 
-### Simulation descriptor (example)
+- **Molecule**: name of a data item
+- **Concentration**: value associated to a particular molecule
+- **Node**: a container of molecules/reactions, living inside an environment
+- **Environment**: the Alchemist abstration for the space.
+    - It is a container for nodes, and it is able to tell:
+  a) Where the nodes are in the space - i.e. their position
+  b) How distant are two nodes
+  c) Optionally, it may provide support for moving nodes
+- **Linking rule**: a function of the current status of the environment that associates to each node a
+  neighborhood
+    - **Neighborhood**: an entity composed by a node (centre) + a set of nodes (neighbors)
+- **Reaction**: any event that can change (through an **action**) the state of the environment
+    - Consists of 0+ **conditions**, 1+ **actions**, and a **time distribution**
+    - Conditions, time distribution, static rate, and rate equation affect the **frequency** of the reaction
+- Alchemist implements an optimised version (NRM) of Gillespie's Stochastic Simulation Algorithm (SSA)
 
-**src/main/yaml/my_simulation.yml**
+So
+
+- The **system state** depends on the configuration of molecules floating in it
+- The **system evolution** depends on the kinds of chemical reactions applicable over time
+
+Another key concept is the **dependency graph**
+
+- Actions are outputs
+- Conditions are inputs
+
+### Running simulations
+
+Use task configured in `build.gradle.kts`:
+
+```bash
+$ ./gradlew hello
+```
+
+Basically, all you need to do to launch a simulation (batch) is running `it.unibo.alchemist.Alchemist`
+ with your simulation's descriptor. So, another approach is the following:
+
+```bash
+./gradlew fatJar # or shadowJar
+
+java -Xmx2524m -cp "build/libs/<MYFATJAR>.jar" \
+  it.unibo.alchemist.Alchemist \
+  -b -var random \
+  -y <path-to-yaml> -e data/20191004-test \
+  -t 100 -p 1 -v &> exec.txt &
+```
+
+### Scafi
+
+The simulation descriptor must indicate `incarnation: scafi`
+ and configure a `RunScafiProgram` action
+ pointing to the class of some class implementing `AggregateProgram`.
 
 ```yaml
-variables:
-  random: &random
-    min: 0
-    max: 29
-    step: 1
-    default: 2
-  commRadius: &commRadius
-    min: 35
-    max: 55
-    step: 15.0
-    default: 50.0
-              
-export:
-  - time
-
-seeds:
-  scenario: *random
-  simulation: *random
-  
 incarnation: scafi
 
 pools:
@@ -41,87 +71,22 @@ pools:
       type: Event
       actions:
         - type: RunScafiProgram
-          parameters: [it.unibo.simulations.MyAggregateProgram, 20]
-  - pool: &contents
-    - molecule: grain
-      concentration: 10
-
-environment:
-  type: OSMEnvironment
-  parameters: [cesena.pbf, false, false]
-
-positions:
-  type: LatLongPosition
-
-network-model:
-  type: ConnectWithinDistance
-  parameters: [*commRadius]
-
-displacements:
-  - in:
-      type: Rectangle
-      parameters: [200, 44.13621, 12.24045, 0.00345, 0.00706]
-    programs:
-      - *program
-    contents: *contents
+          parameters: [it.unibo.casestudy.HelloWorld, 5.0] # second argument is retention time
+    - program: send
 ```
-
-where the crucial parts related to scafi are merely:
-
-```yaml
-incarnation: scafi
-
-# ...........
-      actions:
-        - type: RunScafiProgram
-          parameters: [it.unibo.simulations.MyAggregateProgram, 20]
-```
-
-### Aggregate program: example
-
-**src/main/scala/it/unibo/simulations/MyAggregateProgram.scala**
+An example ScaFi program is the following
 
 ```scala
-package it.unibo.simulations
+package it.unibo.casestudy
 
+import it.unibo.alchemist.model.implementations.molecules.SimpleMolecule
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist._
 
-class MyAggregateProgram extends AggregateProgram
-  with StandardSensors with ScafiAlchemistSupport with BlockG with BlockC with BlockS with FieldUtils {
-
-  override type MainResult = Any
-
-  override def main = {
-    1+1
+class HelloWorld extends AggregateProgram with StandardSensors with Gradients {
+  override def main(): Any = {
+    val x = node.get[Int]("prova")
+    node.put("prova2", x+1)
+    classicGradient(mid==100)
   }
-
 }
-```
-
-### Build the project
-
-```commandline
-$ ./gradlew
-```
-
-It will create a shadow JAR: `build/libs/sim.jar`.
-
-### Launching simulations
-
-Simulations are started through commands like:
-
-```commandline
-$ ./gradlew --no-daemon
-$ java -Xmx5024m -cp "build/libs/sim.jar" \
-  it.unibo.alchemist.Alchemist \
-  -b -var <VAR1> <VAR2> ... \
-  -y <simulationDescriptor> -e <baseFilepathForDataFiles> \
-  -t <simulationDuration> -p <numOfParallelRuns> -v &> log.txt &
-```
-
-E.g.,
-```commandline
-$ java -Xmx5024m -cp "build/libs/sim.jar" it.unibo.alchemist.Alchemist \
-  -b -var random -y src/main/yaml/my_simulation.yml -e data/exp1 \
-  -t 10 -p 3 -v &> log.txt &
 ```

@@ -151,6 +151,6 @@ fun makeTest(
     }*/
 }
 
-makeTest(name="hello", file = "helloworld", time = 100.0, vars = setOf("random"), taskSize = 2800)
+makeTest(name="hello", file = "hello_scafi", time = 100.0, vars = setOf("random"), taskSize = 2800)
 
 defaultTasks("fatJar")
