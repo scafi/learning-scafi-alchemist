@@ -1,0 +1,12 @@
+module hello_protelis
+
+import protelis:coord:spreading
+import it.unibo.protelisFunctions.ProtelisFunctions.* // for out.println(...), parseInt()...
+
+let id = parseInt(self.getDeviceUID().toString());
+env.put("uid", id);
+let source = id>100 && id<110;
+env.put("source", source);
+let d = distanceTo(source);
+env.put("it.unibo.casestudy.HelloWorld", d);
+d

@@ -1,0 +1,83 @@
+module crowd
+
+import java.lang.Math.*
+import java.lang.Double.isFinite
+import Overcrowding.*
+import protelis:coord:accumulation
+import protelis:coord:spreading
+import protelis:coord:sparsechoice
+import protelis:state:time
+import protelis:coord:meta
+import protelis:lang:utils
+
+def countNearby(range) {
+	let human = rep(h <- env.has("human")) { h };
+	sumHood PlusSelf(mux(human && nbrRange() < range) { 1 } else { 0 })
+}
+
+def densityEstimation(p, range, w) {
+	countNearby(range) / (p * PI * range ^ 2 * w)
+}
+
+def dangerousDensity(p, range, dangerousDensity, groupSize, w) {
+	let partition = S(range, nbrRange);
+	let localDensity = densityEstimation(p, range, w);
+	let avg = summarize(partition, sum, localDensity, 0) / summarize(partition, sum, 1, 0);
+	let count = summarize(partition, sum, 1 / p, 0);
+	avg > dangerousDensity && count > groupSize
+}
+
+def crowdTracking(p, range, w, crowdedDensity, dangerousThreshold, groupSize, timeFrame) {
+	if (isRecentEvent(densityEstimation(p, range, w) > crowdedDensity, timeFrame)) {
+		if (dangerousDensity(p, range, dangerousThreshold, groupSize, w)) {
+			overcrowded()
+		} else { atRisk() }
+	} else { none() }
+}
+
+def vectorFrom(target) {
+	let xy = 2 * self.getCoordinates() - broadcast(target, self.getCoordinates());
+	let lat = xy.get(1);
+	let long = xy.get(1);
+	if (isFinite(lat) && isFinite(long)) {
+		[xy.get(1), xy.get(0)]
+	} else {
+		noAdvice()
+	}
+}
+
+def noAdvice() { [NaN, NaN] }
+
+def direction(radius, crowding) {
+	mux (distanceTo(crowding == atRisk()) < radius) {
+		vectorFrom(crowding == overcrowded())
+	} else {
+		noAdvice()
+	}
+}
+
+def warning(radius, crowding) {
+	distanceTo(crowding == atRisk()) < radius && crowding != overcrowded()
+}
+
+/*
+ * In FOCAS:
+ * p = 0.1
+ * range = 15 // 30
+ * wRange = 30 // 100
+ * commRange = n.a.
+ * avgThreshold = 2.17 people / m²
+ * sumThreshold = 300 people
+ * maxDensity = 1.08 people / m²
+ * timeFrame = 60
+ * w = 0.25 (fraction of walkable space in the local urban environment)
+ */
+//countNearby(1000)
+//densityEstimation(0.005, 60, 0.25)
+//dangerousDensity(0.005, 30, 2.17, 300, 0.25)
+let crowding = crowdTracking(0.005, 30, 0.25, 1.08, 2.17, 300, 60);
+env.put("overcrowded", crowding == overcrowded());
+env.put("risk", crowding == atRisk());
+let warning = warning(50, crowding);
+env.put("warning", warning);
+warning

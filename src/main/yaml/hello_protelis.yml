@@ -1,0 +1,60 @@
+variables:
+  random: &random
+    min: 0
+    max: 29
+    step: 1
+    default: 2
+  range: &range
+    formula: 350
+    language: js
+  moveFrequency: &moveFrequency
+    formula: 1/20
+    language: js
+
+export:
+  - time
+
+seeds:
+  scenario: *random
+  simulation: *random
+  
+incarnation: protelis
+
+ReproduceGPSTrace: &ReproduceGPSTrace
+  type: ReproduceGPSTrace
+  parameters: ["vcmuser.gpx", false, AlignToTime, 1365922800, false, false]
+
+environment:
+  type: OSMEnvironment
+  parameters: ["vcm.pbf", false]
+
+network-model:
+  type: ConnectWithinDistance #*connectionType
+  parameters: [*range]
+
+pools:
+  - pool: &program
+    - time-distribution:
+        type: ExponentialTime
+        parameters: [1]
+      type: Event
+      actions:
+        - type: RunProtelisProgram
+          parameters: ["hello_protelis", 10] # second param is 'retention time' (pay attention to it!!!)
+    - program: send # NOTE: this is needed!
+  - pool: &moveWithTraces
+    - time-distribution: *moveFrequency
+      type: Event
+      actions:
+      - *ReproduceGPSTrace
+
+displacements:
+- in:
+    type: FromGPSTrace
+    parameters: [1497, "vcmuser.gpx", false, AlignToTime, 1365922800, false, false]
+  programs:
+  - *moveWithTraces
+  - *program
+  contents:
+  - molecule: test
+    concentration: true
