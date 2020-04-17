@@ -1,7 +1,7 @@
 variables:
   random: &random
     min: 0
-    max: 29
+    max: 2
     step: 1
     default: 2
   range: &range
@@ -13,11 +13,17 @@ variables:
 
 export:
   - time
+  - molecule: g
+    aggregators: [sum]
+    value-filter: onlyfinite
+  - molecule: g
+    aggregators: [mean]
+    value-filter: onlyfinite
 
 seeds:
   scenario: *random
   simulation: *random
-  
+
 incarnation: scafi
 
 ReproduceGPSTrace: &ReproduceGPSTrace
@@ -27,6 +33,8 @@ ReproduceGPSTrace: &ReproduceGPSTrace
 environment:
   type: OSMEnvironment
   parameters: ["vcm.pbf", false]
+  #type: Continuous2DEnvironment
+  #parameters: []
 
 network-model:
   type: ConnectWithinDistance #*connectionType
@@ -58,3 +66,8 @@ displacements:
   contents:
   - molecule: test
     concentration: true
+  - molecule: g
+    concentration: Double.PositiveInfinity
+#- in:
+#    type: Grid
+#    parameters: [0, 0, 200, 80, 10, 10, 1, 1]
