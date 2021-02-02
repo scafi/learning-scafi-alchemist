@@ -25,6 +25,7 @@ import ruamel.yaml as yaml
 from textwrap import wrap
 #import copy  # copy.deepcopy(myDict)
 #import fnmatch # for fnmatch.fnmatch(str,glob)
+from functools import reduce
 
 #################################################################################
 ############################## Script functions #################################
@@ -89,7 +90,7 @@ def process_file_content(filehandle):
   # Read data
   lines = filehandle.readlines()
   # Removes empty and comment lines and maps to float
-  data_rows = np.array([map(float, s.strip().split(" ")) for s in lines if len(s)>0 and s[0]!="#"], dtype='float')
+  data_rows = np.array([list(map(float, s.strip().split(" "))) for s in lines if len(s)>0 and s[0]!="#"], dtype='float')
   return data_rows
 
 def do_bucketize(contents, nbuckets=100, start=None, end=None):
@@ -113,8 +114,8 @@ def merge_samples(contents, configs):
     print("CONFIGURATION: " + str(config) + " has " + str(nsamples) + " samples.")
     
     matrices = [contents[sample_config] for sample_config in sconfigs]
-    time = map(lambda x: round(x), matrices[0][0]) # time should be the same for all
-    matrices = map(lambda l: l[1:], matrices) # skips the time dimension for each sample
+    time = list(map(lambda x: round(x), matrices[0][0])) # time should be the same for all
+    matrices = list(map(lambda l: l[1:], matrices)) # skips the time dimension for each sample
     # Assumption: the position of values in matrices reflects the time in a consistent manner
     
     # Printing statistics
@@ -128,7 +129,7 @@ def merge_samples(contents, configs):
     #print(stats)
     
     merged = reduce(lambda a,b: a+b, matrices)
-    merged = map(lambda x: x/nsamples, merged)
+    merged = list(map(lambda x: x/nsamples, merged))
     merged.insert(0,time) # reinserts time
     res[config] = merged
   return res
@@ -147,14 +148,14 @@ def plot(config,content):
       plt.plot(content[pformat[0]], content[pformat[k]], color=the_plots_colors[nf][pformat[k]], label=the_plots_labels[pformat[k]], linewidth=line_widths[nf][k])
       maxy = max(maxy, np.nanmax(content[pformat[k]]))
     maxy = min(maxy+10, limitPlotY[nf])
-    if forceLimitPlotY.has_key(nf): maxy = forceLimitPlotY[nf]
+    if nf in forceLimitPlotY: maxy = forceLimitPlotY[nf]
     axes = plt.gca()
     axes.set_ylim(ymax = maxy, ymin = startPlotY[nf])  
-    if forceLimitPlotX.has_key(nf): axes.set_xlim(xmax = forceLimitPlotX[nf])  
-    plt.legend(loc= legendPosition[nf] if legendPosition.has_key(nf) else 'upper right', prop={'size': legend_size})
+    if nf in forceLimitPlotX: axes.set_xlim(xmax = forceLimitPlotX[nf])
+    plt.legend(loc= legendPosition[nf] if nf in legendPosition else 'upper right', prop={'size': legend_size})
     t = plt.title(title_prefix[nf]+title)
     plt.subplots_adjust(top=.84) 
-    suffix = (suffixes[nf] if suffixes.has_key(nf) else "".join(map(str,pformat))) + "_" + parts_suffix
+    suffix = (suffixes[nf] if nf in suffixes else "".join(map(str,pformat))) + "_" + parts_suffix
     savefn = outdir+basefn+"_"+ suffix +".png"
     print("SAVE: " + savefn)
     plt.tight_layout()
