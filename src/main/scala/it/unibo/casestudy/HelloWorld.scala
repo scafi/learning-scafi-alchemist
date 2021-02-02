@@ -9,7 +9,7 @@ class HelloWorld extends AggregateProgram with StandardSensors with ScafiAlchemi
     // Access to node state through "molecule"
     val x = if(node.has("prova")) node.get[Int]("prova") else 1
     // An aggregate operation
-    val g = classicGradient(mid==100)
+    val g = classicGradient(mid()==100)
     // Write access to node state
     node.put("g", g)
     // Return value of the program

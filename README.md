@@ -1,7 +1,7 @@
 # Learning simulations with ScaFi-Alchemist
 
-* ScaFi is an aggregate programming framework
-* Alchemist is a (meta-)simulator
+* [ScaFi](https://scafi.github.io) is an aggregate programming framework
+* [Alchemist](https://alchemistsimulator.github.io) is a flexible (meta-)simulator for multi-agent systems
 
 ## Alchemist
 

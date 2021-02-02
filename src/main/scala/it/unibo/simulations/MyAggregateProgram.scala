@@ -7,7 +7,7 @@ class MyAggregateProgram extends AggregateProgram
 
   override type MainResult = Any
 
-  override def main = {
+  override def main(): Int = {
     1+1
   }
 

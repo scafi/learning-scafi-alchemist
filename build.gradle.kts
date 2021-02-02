@@ -3,12 +3,23 @@ import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.adtran:scala-multiversion-plugin:1.+") // for scala cross building
+    }
+}
+
 plugins {
     java
     scala
     id("com.github.johnrengelman.shadow") version "4.0.3"
     idea
     kotlin("jvm") version "1.3.50"
+    id("com.adtran.scala-multiversion-plugin") version "1.0.36" // for scala cross building
 }
 
 repositories {
@@ -16,10 +27,14 @@ repositories {
 }
 
 dependencies {
-    implementation("it.unibo.alchemist:alchemist:9.2.1")
-    implementation("it.unibo.alchemist:alchemist-incarnation-scafi:9.2.1")
-    implementation("org.scala-lang:scala-library:2.12.2")
-    implementation("it.unibo.apice.scafiteam:scafi-core_2.12:0.3.2")
+    fun alchemist(module: String? = null) = "it.unibo.alchemist:alchemist${if (module == null) "" else "-$module"}:_"
+
+    implementation(alchemist())
+    implementation(alchemist("incarnation-scafi"))
+    //implementation(alchemist("swingui"))
+
+    implementation("org.scala-lang:scala-library:%scala-version%")
+    implementation("it.unibo.scafi:scafi-core_2.13:_")
 
     /*
     implementation("com.github.cb372:scalacache-guava_2.12:0.9.3")
@@ -117,7 +132,7 @@ fun makeTest(
     }
 
     val threadCount = threads ?: maxOf(1, minOf(Runtime.getRuntime().availableProcessors(), heap.toInt() / taskSize ))
-    println("Running on $threadCount threads")
+    println("$name > Running on $threadCount threads and with maxHeapSize $heap")
 
     val today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 
@@ -153,4 +168,4 @@ fun makeTest(
 
 makeTest(name="hello", file = "hello_scafi", time = 100.0, vars = setOf("random"), taskSize = 2800)
 
-defaultTasks("fatJar")
+// defaultTasks("fatJar")
