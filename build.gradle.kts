@@ -31,7 +31,7 @@ dependencies {
 
     implementation(alchemist())
     implementation(alchemist("incarnation-scafi"))
-    //implementation(alchemist("swingui"))
+    implementation(alchemist("swingui"))
 
     implementation("org.scala-lang:scala-library:%scala-version%")
     implementation("it.unibo.scafi:scafi-core_2.13:_")
