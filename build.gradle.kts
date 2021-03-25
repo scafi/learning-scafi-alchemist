@@ -16,10 +16,11 @@ repositories {
 }
 
 dependencies {
-    implementation("it.unibo.alchemist:alchemist:9.2.1")
-    implementation("it.unibo.alchemist:alchemist-incarnation-scafi:9.2.1")
-    implementation("org.scala-lang:scala-library:2.12.2")
-    implementation("it.unibo.apice.scafiteam:scafi-core_2.12:0.3.2")
+    implementation("it.unibo.alchemist:alchemist:10.0.1")
+    implementation("it.unibo.alchemist:alchemist-swingui:10.0.1") //without this dependency, the simulation doesn't produce data
+    implementation("it.unibo.alchemist:alchemist-incarnation-scafi:10.0.1")
+    implementation("org.scala-lang:scala-library:2.13.2")
+    implementation("it.unibo.scafi:scafi-core_2.13:0.3.3")
 
     /*
     implementation("com.github.cb372:scalacache-guava_2.12:0.9.3")
@@ -140,8 +141,9 @@ fun makeTest(
                 "-p", threadCount,
                 "-i", "$sampling"
         )
+
         if (vars.isNotEmpty()) {
-            args("-b", "-var", *vars.toTypedArray())
+            args("-b", "-var", *vars.toTypedArray(), "--headless")
         }
     }
     /*tasks {
@@ -152,5 +154,6 @@ fun makeTest(
 }
 
 makeTest(name="hello", file = "hello_scafi", time = 100.0, vars = setOf("random"), taskSize = 2800)
+makeTest(name="helloGUI", file = "hello_scafi")
 
 defaultTasks("fatJar")
