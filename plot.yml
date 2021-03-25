@@ -1,34 +1,59 @@
-# Goal is to show reactivity to spikes of load, withstanding leader failures, and the benefit of an updated metric
 the_plots_labels:
   - Time                 #0
-  - 'g (sum)'
-  - 'g (mean)'
-the_plots_formats:
-  - [0,1,2]
-  #- [0,11,12,13]
-#  - [0,2,3,4,5]
-#y_labels: ['# of requests', '# of requests','','% of utilization of workers']
-#file_suffixes:
-#  - errors
-line_widths:
-  - [2,2,2,2,2,2,2,2,2,2,2]
-default_colors: &default_colors ["black", "red", "green"]
-the_plots_colors:
+  - 'gradient'
+  - 'gradient (avg)'
+
+the_plots_formats: # a list of plot format. Each format is a list of field index that you want to show in the plot. A line define an "experiment"
+  - [0, 1, 2] #a plot with Time, gradient and gradient(avg)
+  #- [0,11,12,13] ---> you can add multiple formats
+
+y_labels: ['Meter'] ## you can specify the y label for each plot defined above (if you have three plot format, you can specify 3 y_labels
+
+file_suffixes: # for each experiment, you can specify an ad-hoc suffix
+  # - errors
+
+line_widths: ## for each label, it tells how much the line width
+  - [0, 4, 3]
+
+default_colors: &default_colors ["black", "red", "#FF00FF"]
+
+the_plots_colors: # for each experiment and for each label, it tells the the color line. A color could be expressed as a string ("red", "yellow") or with Hexadecimal notation ("#FF00FF")
   - *default_colors
-legend_position:
+
+legend_position: ## for each experiment, it specifies where the legend should be plotted in. the accepted values are listed here: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html
+# - "best" | "upper right" | "upper left" | "lower right" | "lower left" | "right" | "center" |" "upper center" | "lower center" | "center right" | "center left"
   - "upper right"
   - "upper right"
-legend_size: 12
-force_limit_plot_y:
-#  1: 140
-#   3: 1000
-#  4: 35
-#  0: 40
-#  3: 80
-#force_limit_plot_x:
-#  0: 800
-#  1: 800
-#  3: 800
-sampling: true
-#title_prefix: ''
-#excluded_titles: [0]
+
+legend_size: 12 # the same for all experiments
+
+force_limit_plot_y: # force the limit for each experiment.
+  #- 40000 # maximum value on the y axis
+
+#force_limit_plot_x: # same as force_limit_plot_y but for the x axis
+#  - 800
+
+#start_plot_y: # for each experiment, you can specify the lower bound for the y axis
+#  - 1000
+
+sampling: # for each experiment, tells if there is a 'random' dimension for sampling
+  - true
+#  - false
+#  - true
+
+hlines: # for each experiment, you can add horizontal lines.
+  - [[400000, { linestyle: '--' }]]
+
+vlines: # for each experiment, you can add vertical lines.
+  - [[30, { linestyle: ':' , color: 'gray'}]]
+
+line_styles: # for each experiment and for each label, you can specify lines styles.
+# - [‘solid’ | ‘dashed’, ‘dashdot’, ‘dotted’ | (offset, on-off-dash-seq) | '-' | '--' | '-.' | ':' | 'None' | ' ' | '']
+  - ['solid','solid','solid','solid','solid']
+
+excluded_titles: # for each experiment, you can exclude labels in the title.
+  - [0] # [1]
+
+title_prefix: #for each experiment, you can add a prefix in the title
+#- 'a'
+#- 'b'

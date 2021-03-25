@@ -61,15 +61,15 @@ def process_files(filepaths):
 
 # Returns a pair (id,matrix) for each parsed file
 def process_file(filepath):
-  print("\n>>> Processing file: " + filepath)
+  print(("\n>>> Processing file: " + filepath))
   # Open file handle
   fh = open(filepath, "r")
 
   # Deduce some info from file name
   parts = re.findall('_+([^-]+)-(\d+\.?\d*)', filepath.replace(join(basedir,basefn),''))
-  parts = map(lambda p: (p[0],format(float(p[1]),'.6f').rstrip('0')), parts)
+  parts = [(p[0],format(float(p[1]),'.6f').rstrip('0')) for p in parts]
   parts = tuple(parts) # this must be hashable (and lists are not)
-  print("Dimensions: " + "; ".join(map(lambda x: str(x), parts)))
+  print(("Dimensions: " + "; ".join([str(x) for x in parts])))
   parts_suffix = "_".join(map("-".join,parts))
   title = "; ".join(map("=".join,parts))
 
@@ -97,7 +97,7 @@ def process_file_content(filehandle):
 
 def do_bucketize(contents, nbuckets=100, start=None, end=None):
   res = dict()
-  for config, content in contents.items():
+  for config, content in list(contents.items()):
     time = content[0]
     if start==None:
       start = time[0]
@@ -111,13 +111,13 @@ def do_bucketize(contents, nbuckets=100, start=None, end=None):
 
 def merge_samples(contents, configs):
   res = dict()
-  for config, sconfigs in configs.items():
+  for config, sconfigs in list(configs.items()):
     nsamples = len(sconfigs)
-    print("\tCONFIGURATION: " + str(config) + " has " + str(nsamples) + " samples.")
+    print(("\tCONFIGURATION: " + str(config) + " has " + str(nsamples) + " samples."))
 
     matrices = [contents[sample_config] for sample_config in sconfigs]
-    time = list(map(lambda x: round(x), matrices[0][0]))  # time should be the same for all
-    matrices = list(map(lambda l: l[1:], matrices))  # skips the time dimension for each sample
+    time = list([round(x) for x in matrices[0][0]])  # time should be the same for all
+    matrices = list([l[1:] for l in matrices])  # skips the time dimension for each sample
     # Assumption: the position of values in matrices reflects the time in a consistent manner
 
     # Printing statistics
@@ -137,13 +137,13 @@ def merge_samples(contents, configs):
 
     # Merge the matrices
     merged = reduce(lambda a, b: a + b, matrices)
-    merged = list(map(lambda x: x / nsamples, merged))
+    merged = list([x / nsamples for x in merged])
     merged.insert(0, time)  # reinserts time
     res[config] = merged
   return res
 
 def plot(config,content,nf,pformat):
-  title = map("=".join,config)
+  title = list(map("=".join,config))
   if doWrap is not None: title = wrap("    ".join(title), 30)
   title = "\n".join([s.strip() for k,s in enumerate(title) if k not in excluded_titles[nf]])
   parts_suffix = "_".join(map("-".join,config))
@@ -179,7 +179,7 @@ def plot(config,content,nf,pformat):
   plt.subplots_adjust(top=.84)
   suffix = (suffixes[nf] if nf in suffixes else "".join(map(str,pformat))) + "_" + parts_suffix
   savefn = outdir+basefn+"_"+str(nf)+"_"+suffix +"." + figFormat
-  print("SAVE: " + savefn)
+  print(("SAVE: " + savefn))
   plt.tight_layout()
   if nf in exportLegend and exportLegend[nf]==True:
       legendsavefn = outdir+basefn+"_"+str(nf)+"_legend." + figFormat
@@ -221,7 +221,7 @@ title_prefix = ""
 
 script = sys.argv[0]
 if len(sys.argv)<5:
-  print("USAGE: plotter2 <plotConfig> <basedir> <fileregex> <basefn>")
+  print("USAGE: plotter <plotConfig> <basedir> <fileregex> <basefn>")
   exit(0)
 
 plotconfig = sys.argv[1]
@@ -229,22 +229,23 @@ basedir = sys.argv[2]
 fileregex = sys.argv[3]
 basefn = sys.argv[4]
 outdir = os.path.join(sys.argv[5],'') if len(sys.argv)>=6 else os.path.join(basedir, "imgs/")
+
 if not os.path.exists(outdir):
   os.makedirs(outdir)
 
 files = get_data_files(basedir,fileregex)
 
-print("Executing script: basedir=" + basedir + "\t fileregex=" + fileregex)
-print("Files to be processed: " + str(files))
-print("Output directory for graphs: " + str(outdir))
-print("Loading plot configurartion: " + str(plotconfig))
+print(("Executing script: basedir=" + basedir + "\t fileregex=" + fileregex))
+print(("Files to be processed: " + str(files)))
+print(("Output directory for graphs: " + str(outdir)))
+print(("Loading plot configurartion: " + str(plotconfig)))
 
 ############################# Plot configuration
 
 def parse_sim_option(pc, option, default=None):
     opt = pc.get(option)
     if type(opt) is dict:
-        defval = opt[opt.keys()[-1]]
+        defval = opt[list(opt.keys())[-1]]
         opt = defaultdict(lambda: defval, opt)
     elif type(opt) is list:
         defval = opt[-1]
@@ -254,7 +255,7 @@ def parse_sim_option(pc, option, default=None):
     else: # single value
         defval = opt
         opt = defaultdict(lambda: defval)
-    print(option + " >> " + str(opt))
+    print((option + " >> " + str(opt)))
     return opt
 
 with open(plotconfig, 'r') as stream:
@@ -307,7 +308,7 @@ contents = process_files(files)
 # CONFIGURATIONS
 #   file1_2 [d1=*, d2=B ] => export1=[...], ..., exportK=[...]
 #   file3_4 [d1=*, d2=B'] => export1=[...], ..., exportK=[...]
-configs = contents.keys() # List of configs, where each config is an N-dim tuple of (k,v) tuples
+configs = list(contents.keys()) # List of configs, where each config is an N-dim tuple of (k,v) tuples
 # if sampling:
 #   # Let's group configurations (individual datasets) into groups where only a sampling dimension varies
 #   # sconfigs is a dict where keys are (dims-'random') and values are lists of configs
@@ -325,12 +326,12 @@ configs = contents.keys() # List of configs, where each config is an N-dim tuple
 for nf, pformat in enumerate(the_plots_formats):
   c = copy.deepcopy(contents)
   if nf in sampling and sampling[nf] == True:
-    print(str(nf) + " is to be sampled")
+    print((str(nf) + " is to be sampled"))
     sconfigs = group_by_varying_values_of(sampling_dim[nf], configs)
     c = merge_samples(c, sconfigs)
   else:
-    print(str(nf) + " is NOT to be sampled")
-  for title, content in c.items():
+    print((str(nf) + " is NOT to be sampled"))
+  for title, content in list(c.items()):
     plot(title, content, nf, pformat)
 
 
