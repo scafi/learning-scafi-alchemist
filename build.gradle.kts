@@ -27,25 +27,15 @@ repositories {
 }
 
 dependencies {
-    fun alchemist(module: String? = null) = "it.unibo.alchemist:alchemist${if (module == null) "" else "-$module"}:_"
+    fun alchemist(module: String? = null) = "it.unibo.alchemist:alchemist${if (module == null) "" else "-$module"}:11.3.0"
 
     implementation(alchemist())
     implementation(alchemist("incarnation-scafi"))
     implementation(alchemist("swingui"))
+    implementation ("org.danilopianini:thread-inheritable-resource-loader:0.3.5")
 
     implementation("org.scala-lang:scala-library:%scala-version%")
-    implementation("it.unibo.scafi:scafi-core_2.13:_")
-
-    /*
-    implementation("com.github.cb372:scalacache-guava_2.12:0.9.3")
-    implementation("org.danilopianini:thread-inheritable-resource-loader:0.3.2")
-
-    implementation("org.protelis:protelis-lang:13.0.2")
-    implementation("org.jgrapht:jgrapht-core:1.3.1")
-    implementation("org.apache.commons:commons-lang3:3.9")
-    implementation("com.github.ben-manes.caffeine:caffeine:2.8.0")
-    implementation(kotlin("stdlib"))
-     */
+    implementation("it.unibo.scafi:scafi-core_2.13:0.3.3")
 }
 
 tasks.withType<ScalaCompile> {
@@ -113,7 +103,8 @@ fun makeTest(
         maxHeap: Long? = null,
         taskSize: Int = 1024,
         threads: Int? = null,
-        debug: Boolean = false
+        debug: Boolean = false,
+        effects: String? = null
 ) {
     val heap: Long = maxHeap ?: if (System.getProperty("os.name").toLowerCase().contains("linux")) {
         ByteArrayOutputStream()
@@ -132,11 +123,17 @@ fun makeTest(
     }
 
     val threadCount = threads ?: maxOf(1, minOf(Runtime.getRuntime().availableProcessors(), heap.toInt() / taskSize ))
-    println("$name > Running on $threadCount threads and with maxHeapSize $heap")
 
     val today = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 
+    tasks.register("$name-pre") {
+        doLast {
+            println("$name > Running task $name on $threadCount threads and with maxHeapSize $heap")
+        }
+    }
+
     task<JavaExec>("$name") {
+        dependsOn("$name-pre")
         classpath = sourceSets["main"].runtimeClasspath
         classpath("src/main/protelis")
         main = "it.unibo.alchemist.Alchemist"
@@ -158,14 +155,11 @@ fun makeTest(
         if (vars.isNotEmpty()) {
             args("-b", "-var", *vars.toTypedArray())
         }
-    }
-    /*tasks {
-        "runTests" {
-            dependsOn("$name")
+        if(effects != null){
+            args("-g", effects)
         }
-    }*/
+    }
 }
 
+makeTest(name="hellogui", file = "hello_scafi", time = 100.0, taskSize = 2800, effects="src/main/resources/helloworld.aes")
 makeTest(name="hello", file = "hello_scafi", time = 100.0, vars = setOf("random"), taskSize = 2800)
-
-// defaultTasks("fatJar")

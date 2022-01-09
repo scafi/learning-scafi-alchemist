@@ -13,22 +13,19 @@ variables:
 
 export:
   - time
-  - molecule: g
-    aggregators: [sum]
-    value-filter: onlyfinite
-  - molecule: g
-    aggregators: [mean]
-    value-filter: onlyfinite
+  - type: NumberOfNodes
+#  - molecule: g
+#    aggregators: [sum]
+#    value-filter: onlyfinite
+#  - molecule: g
+#    aggregators: [mean]
+#    value-filter: onlyfinite
 
 seeds:
   scenario: *random
   simulation: *random
 
 incarnation: scafi
-
-ReproduceGPSTrace: &ReproduceGPSTrace
-  type: ReproduceGPSTrace
-  parameters: ["vcmuser.gpx", false, AlignToTime, 1365922800, false, false]
 
 environment:
   type: OSMEnvironment
@@ -40,7 +37,7 @@ network-model:
   type: ConnectWithinDistance #*connectionType
   parameters: [*range]
 
-pools:
+_pools:
   - pool: &program
     - time-distribution:
         type: ExponentialTime
@@ -48,18 +45,20 @@ pools:
       type: Event
       actions:
         - type: RunScafiProgram
-          parameters: [it.unibo.casestudy.HelloWorld, 5.0] # second argument is retention time
+          parameters: [it.unibo.scafi.examples.HelloWorld, 5.0] # second argument is retention time
     - program: send
+  - pool: &ReproduceGPSTrace
+      type: ReproduceGPSTrace
+      parameters: [ "vcmuser.gpx", false, AlignToTime, 1365922800, false, false ]
   - pool: &move
     - time-distribution: *moveFrequency
       type: Event
       actions:
       - *ReproduceGPSTrace
 
-displacements:
-- in:
-    type: FromGPSTrace
-    parameters: [1497, "vcmuser.gpx", false, AlignToTime, 1365922800, false, false]
+deployments:
+  type: FromGPSTrace
+  parameters: [1497, "vcmuser.gpx", false, AlignToTime, 1365922800, false, false]
   programs:
   - *move
   - *program
