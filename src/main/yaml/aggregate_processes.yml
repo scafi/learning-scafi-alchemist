@@ -1,0 +1,68 @@
+variables:
+  random: &random
+    min: 0
+    max: 49
+    step: 1
+    default: 2
+  range: &range
+    formula: 100
+    language: js
+  moveFrequency: &moveFrequency
+    formula: 1/20
+    language: js
+#  procs: &procs
+#    language: scala
+#    formula: "Map(0 -> (0,50), 20 -> (1,100), 30 -> (390,50), 25 -> (190, 35), 80 -> (380, 85))"
+
+export:
+  - time
+  - molecule: numPids
+    aggregators: [sum]
+    value-filter: onlyfinite
+
+seeds:
+  scenario: *random
+  simulation: *random
+
+incarnation: scafi
+
+environment:
+  type: Continuous2DEnvironment
+  parameters: []
+
+network-model:
+  type: ConnectWithinDistance
+  parameters: [*range]
+
+_pools:
+  - pool: &program
+    - time-distribution:
+        type: ExponentialTime # DiracComb
+        parameters: 1 # [0,1]
+      type: Event
+      actions:
+        - type: RunScafiProgram
+          parameters: [it.unibo.scafi.examples.AggregateProcesses, 2.0] # second argument is retention time
+    - program: send
+  - pool: &move
+      - time-distribution: 1
+        type: Event
+        actions:
+          - type: MoveToTarget
+            parameters: [target, 50]
+
+deployments:
+  type: Grid
+  parameters: [0, 0, 1000, 1000, 50, 50, 5, 5]
+  programs:
+  - *move
+  - *program
+  contents:
+  - molecule: test
+    concentration: true
+  - molecule: g
+    concentration: Double.PositiveInfinity
+#  - molecule: procs
+#    concentration: *procs
+  - molecule: numPids
+    concentration: 0

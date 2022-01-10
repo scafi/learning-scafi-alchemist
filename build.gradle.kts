@@ -163,3 +163,5 @@ fun makeTest(
 
 makeTest(name="hellogui", file = "hello_scafi", time = 100.0, taskSize = 2800, effects="src/main/resources/helloworld.aes")
 makeTest(name="hello", file = "hello_scafi", time = 100.0, vars = setOf("random"), taskSize = 2800)
+
+makeTest(name="aggregate_processes", file = "aggregate_processes", effects="src/main/resources/aggregate_processes.aes")
