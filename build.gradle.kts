@@ -165,3 +165,6 @@ makeTest(name="hellogui", file = "hello_scafi", time = 100.0, taskSize = 2800, e
 makeTest(name="hello", file = "hello_scafi", time = 100.0, vars = setOf("random"), taskSize = 2800)
 
 makeTest(name="aggregate_processes", file = "aggregate_processes", effects="src/main/resources/aggregate_processes.aes")
+
+makeTest(name="scr", file = "selforg_coord_regions", effects="src/main/resources/selforg_coord_regions.aes")
+makeTest(name="scrdata", file = "selforg_coord_regions", time = 1000.0, vars = setOf("random"))

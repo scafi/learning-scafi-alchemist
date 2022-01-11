@@ -1,0 +1,42 @@
+# Goal is to show reactivity to spikes of load, withstanding leader failures, and the benefit of an updated metric
+the_plots_labels:
+  - Time                 #0
+  - 'Num of nodes'
+  - 'leader'
+  - 'included'
+  - 'count (sum)'
+  - 'count (avg)'
+  - 'issues'
+the_plots_formats:
+  - [0,1,3,4,6]
+  - [0,2]
+  #- [0,11,12,13]
+#  - [0,2,3,4,5]
+#y_labels: ['# of requests', '# of requests','','% of utilization of workers']
+#file_suffixes:
+#  - errors
+line_widths:
+  - [2,2,2,2,2,2,2,2,2,2,2]
+  - [2,2,2,2,2,2,2,2,2,2,2]
+default_colors: &default_colors ["black", "black", "green", "blue", "magenta", "purple", "orange"]
+the_plots_colors:
+  - *default_colors
+  - *default_colors
+legend_position:
+  - "lower right"
+  - "lower right"
+legend_size: 12
+force_limit_plot_y:
+  1: 20
+#  1: 140
+#   3: 1000
+#  4: 35
+#  0: 40
+#  3: 80
+#force_limit_plot_x:
+#  0: 800
+#  1: 800
+#  3: 800
+sampling: true
+#title_prefix: ''
+#excluded_titles: [0]

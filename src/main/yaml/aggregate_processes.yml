@@ -42,7 +42,7 @@ _pools:
       type: Event
       actions:
         - type: RunScafiProgram
-          parameters: [it.unibo.scafi.examples.AggregateProcesses, 2.0] # second argument is retention time
+          parameters: [it.unibo.scafi.examples.AggregateProcesses, 5.0] # second argument is retention time
     - program: send
   - pool: &move
       - time-distribution: 1
