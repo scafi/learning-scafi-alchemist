@@ -121,3 +121,4 @@ These can be checked out through the usual git branch mechanism, e.g.:
 Available branches/configurations:
 
 - `scafi-0.3.2-alchemist-9.2.1`
+- `scafi-0.3.3-alchemist-11.3.0`
