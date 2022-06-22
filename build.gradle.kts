@@ -65,10 +65,10 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
             if (System.getenv("CI") == "true" || batch == "true") {
                 // If it is running in a Continuous Integration environment, use the "headless" mode of the simulator
                 // Namely, force the simulator not to use graphical output.
-                args("-hl", "-t", maxTime, "-var", "random")
+                args("-hl", "-t", maxTime)
                 if(variables.isNotEmpty()) {
                     args("-var")
-                    variables.split(";").forEach { args(it) }
+                    variables.split(",").forEach { args(it) }
                 }
             } else {
                 // A graphics environment should be available, so load the effects for the UI from the "effects" folder
