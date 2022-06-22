@@ -12,7 +12,7 @@ class SelforganisingCoordinationRegions extends AggregateProgram with StandardSe
    */
   override def main(): Any = {
     // Sparse choice (leader election) of the cluster heads
-    val leader = S(Params.GRAIN, metric = nbrRange)
+    val leader = S(sense(Params.GRAIN), metric = nbrRange)
     // G block to run a gradient from the leaders
     val g = distanceTo(leader, metric = nbrRange)
     // C block to collect information towards the leaders
@@ -50,7 +50,7 @@ object SelforganisingCoordinationRegions {
     val ISSUES = "issues"
   }
   object Params {
-    val GRAIN = 500
+    val GRAIN = "grain"
   }
 }
 

@@ -1,0 +1,83 @@
+incarnation: scafi
+
+variables:
+  random: &random
+    min: 0
+    max: 5
+    step: 1
+    default: 2
+  range: &range
+    formula: 350
+    language: scala
+  moveFrequency: &moveFrequency
+    formula: 1
+    language: scala
+
+_constants:
+  retentionTime: &retentionTime 5.0
+  gpsTraceFile: &gpsTraceFile "vcmuser.gpx"
+  programRate: &programRate 1.0
+  exportInterval: &exportInterval 1.0
+  totalNodes: &totalNodes 1497
+  timeToAlign: &timeToAlign 1365922800
+  source: &source 100
+
+seeds:
+  scenario: *random
+  simulation: *random
+
+environment:
+  type: OSMEnvironment
+  parameters: ["vcm.pbf", false]
+
+network-model:
+  type: ConnectWithinDistance #*connectionType
+  parameters: [*range]
+
+_reactions:
+  - program: &program
+      - time-distribution:
+          type: ExponentialTime
+          parameters: [*programRate]
+        type: Event
+        actions:
+          - type: RunScafiProgram
+            parameters: [it.unibo.scafi.examples.HelloWorld, *retentionTime] # second argument is retention time
+      - program: send
+  - reproduceGPS: &reproduceGPS
+      type: ReproduceGPSTrace
+      parameters: [ *gpsTraceFile, true, "AlignToTime", *timeToAlign, false, false ]
+  - pool: &move
+      - time-distribution: *moveFrequency
+        type: Event
+        actions:
+          - *reproduceGPS
+
+deployments:
+  type: FromGPSTrace
+  parameters: [*totalNodes, *gpsTraceFile, true, "AlignToTime", *timeToAlign, false, false]
+  programs:
+    - *move
+    - *program
+  contents:
+    - molecule: test
+      concentration: *source
+    - molecule: g
+      concentration: Double.PositiveInfinity
+
+export:
+  - type: CSVExporter
+    parameters:
+      fileNameRoot: "experiment"
+      exportPath: "build/exports/helloScafi"
+      fileExtension: "txt"
+      interval: *exportInterval
+    data:
+      - time
+      - type: NumberOfNodes
+      - molecule: g
+        aggregators: [sum]
+        value-filter: onlyfinite
+      - molecule: g
+        aggregators: [mean]
+        value-filter: onlyfinite

@@ -1,0 +1,78 @@
+incarnation: scafi
+
+variables:
+  random: &random
+    min: 0
+    max: 5
+    step: 1
+    default: 2
+
+_constants:
+  connectionRange: &connectionRange 100
+  retentionTime: &retentionTime 5.0
+  programRate: &programRate 1.0
+  movementRate: &movementRate 10.0
+  movementSpeed: &movementSpeed 50.0
+  exportInterval: &exportInterval 3.0
+  proces: &procs "scala.collection.Map(0 -> (0,50), 20 -> (1,100), 30 -> (390,50), 25 -> (190, 35), 80 -> (380, 85))"
+
+environment:
+  type: Continuous2DEnvironment
+  parameters: []
+
+seeds:
+  scenario: *random
+  simulation: *random
+
+network-model:
+  type: ConnectWithinDistance
+  parameters: [*connectionRange]
+
+_reactions:
+  - program: &program
+    - time-distribution:
+        type: ExponentialTime # DiracComb
+        parameters: *programRate
+      type: Event
+      actions:
+        - type: RunScafiProgram
+          parameters: [it.unibo.scafi.examples.AggregateProcesses, *retentionTime]
+    - program: send
+  - move: &move
+      - time-distribution: *movementRate
+        type: BlendedSteering
+        actions:
+          - type: MoveToTarget
+            parameters: [ target, *movementSpeed ]
+
+deployments:
+  type: Grid
+  parameters: [0, 0, 1000, 1000, 50, 50, 5, 5]
+  properties:
+  - type: Pedestrian
+  programs:
+  - *move
+  - *program
+  contents:
+  - molecule: test
+    concentration: true
+  - molecule: g
+    concentration: Double.PositiveInfinity
+  - molecule: numPids
+    concentration: 0
+  - molecule: procs
+    concentration: *procs
+
+export:
+  - type: CSVExporter
+    parameters:
+      fileNameRoot: "experiment"
+      exportPath: "build/exports/aggregateProcesses"
+      fileExtension: "txt"
+      interval: *exportInterval
+    data:
+      - time
+      - molecule: numPids
+        aggregators: [ sum ]
+        value-filter: onlyfinite
+

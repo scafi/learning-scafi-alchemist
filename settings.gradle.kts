@@ -1,19 +1,15 @@
-import de.fayard.refreshVersions.bootstrapRefreshVersions
-import org.danilopianini.VersionAliases.justAdditionalAliases
+plugins {
+    id("com.gradle.enterprise") version "3.10.2"
+}
 
-buildscript {
-    repositories {
-        gradlePluginPortal()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath("de.fayard.refreshVersions:refreshVersions:0.9.7")
-        classpath("org.danilopianini:refreshversions-aliases:+")
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = "https://gradle.com/terms-of-service"
+        termsOfServiceAgree = "yes"
+        publishOnFailure()
     }
 }
 
-//bootstrapRefreshVersions()
-bootstrapRefreshVersions(justAdditionalAliases)
+enableFeaturePreview("VERSION_CATALOGS")
 
 rootProject.name = "scafi-alchemist-skeleton"

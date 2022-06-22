@@ -1,19 +1,18 @@
 package it.unibo.scafi.examples
 
-import it.unibo.alchemist.model.implementations.molecules.SimpleMolecule
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist._
 
 import scala.concurrent.duration.FiniteDuration
 
 class HelloWorld extends AggregateProgram with StandardSensors with ScafiAlchemistSupport
-  with Gradients with FieldUtils {
+  with BlockG with Gradients with FieldUtils {
   override def main(): Any = {
     checkSensors()
 
     // Access to node state through "molecule"
-    val x = if(node.has("prova")) node.get[Int]("prova") else 1
+    val source = if(node.has("test")) node.get[Int]("test") else 1
     // An aggregate operation
-    val g = classicGradient(mid()==100)
+    val g = classicGradient(mid() == source)
     // Write access to node state
     node.put("g", g)
     // Return value of the program

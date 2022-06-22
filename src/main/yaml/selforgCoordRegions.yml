@@ -1,0 +1,70 @@
+incarnation: scafi
+
+variables:
+  random: &random
+    min: 0
+    max: 5
+    step: 1
+    default: 2
+  range: &range
+    formula: 100
+
+_constants:
+  grain: &grain 500.0
+  retentionTime: &retentionTime 5.0
+  exportInterval: &exportInterval 1.0
+
+environment:
+  type: Continuous2DEnvironment
+  parameters: []
+
+seeds:
+  scenario: *random
+  simulation: *random
+
+network-model:
+  type: ConnectWithinDistance
+  parameters: [*range]
+
+_reactions:
+  - program: &program
+    - time-distribution:
+        type: DiracComb
+        parameters: [0, 1]
+      type: Event
+      actions:
+        - type: RunScafiProgram
+          parameters: [it.unibo.scafi.examples.SelforganisingCoordinationRegions, *retentionTime]
+    - program: send
+
+deployments:
+  type: Grid
+  parameters: [0, 0, 1000, 1000, 50, 50, 25, 25]
+  programs:
+  - *program
+  contents:
+  - molecule: grain
+    concentration: *grain
+
+export:
+  - type: CSVExporter
+    parameters:
+      fileNameRoot: "experiment"
+      exportPath: "build/exports/selforgCoordRegions"
+      fileExtension: "txt"
+      interval: *exportInterval
+    data:
+      - time
+      - type: NumberOfNodes
+      - molecule: leader
+        aggregators: [sum]
+        value-filter: onlyfinite
+      - molecule: included
+        aggregators: [sum]
+        value-filter: onlyfinite
+      - molecule: count
+        aggregators: [sum,mean]
+        value-filter: onlyfinite
+      - molecule: issues
+        aggregators: [sum]
+        value-filter: onlyfinite
