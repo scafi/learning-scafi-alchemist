@@ -12,4 +12,4 @@ gradleEnterprise {
 
 enableFeaturePreview("VERSION_CATALOGS")
 
-rootProject.name = "scafi-alchemist-skeleton"
+rootProject.name = "learning-scafi-alchemist"
