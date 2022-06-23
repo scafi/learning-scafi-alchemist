@@ -10,6 +10,4 @@ gradleEnterprise {
     }
 }
 
-enableFeaturePreview("VERSION_CATALOGS")
-
 rootProject.name = "learning-scafi-alchemist"
