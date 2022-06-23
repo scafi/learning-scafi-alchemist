@@ -32,7 +32,7 @@ jobs:
       - name: Check the simulations on CI
         uses: DanySK/build-check-deploy-gradle-action@2.0.2
         with:
-          check-command: ./gradlew runAll
+          check-command: ./gradlew runAll || ./gradlew runAll || ./gradlew runAll
           should-run-codecov: false
       - uses: actions/setup-python@v4
         with:
