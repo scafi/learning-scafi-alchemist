@@ -122,7 +122,7 @@ Where:
 ```bash
 ./gradlew runSelforgCoordRegions
 ```
-
+![SCR result](https://user-images.githubusercontent.com/23448811/175658741-08537743-a325-4137-be14-a4dd6532237b.gif)
 1. what happened
 2. what is inside
 3. minimal change
@@ -133,6 +133,7 @@ Where:
 ./gradlew runAggregateProcesses
 ```
 
+![Processes API](https://user-images.githubusercontent.com/23448811/175660568-9906a920-d701-48ce-a0de-a0d6fa146425.gif)
 1. what happened
 2. what is inside
 3. minimal change
