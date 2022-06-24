@@ -1,0 +1,72 @@
+# A list of labels associated to the column of the generated csv.
+# If you simulation csv is structured as: Time, A, B, C, this entry should be:
+the_plots_labels: [Time, A, B, C]
+
+# a list of plot format. Each format is a list of field index that you want to show in the plot. A line define a "chart"
+the_plots_formats: 
+  - [0, 1] #a plot with Time, and A
+  - [1, 2] # another plot, with A e B
+
+## you can specify the y label for each plot defined above
+y_labels: [Foo, Bar]
+
+# [Optiona] for each chart, you can specify an ad-hoc suffix
+file_suffixes: [A, B]
+
+## defines for each "plots_label" the line width (a list of "widths" for each chart)
+line_widths: 
+  - [1, 2]
+  - [1, 1]
+
+# [Optional] for each chart and for each label, it tells the the color line. A color could be expressed as a string ("red", "yellow") or with Hexadecimal notation ("#FF00FF")
+the_plots_colors: 
+  - ["blue", "red"]
+  - ["red", "#FFFFFF"]
+
+# [Optional] for each chart, it specifies where the legend should be plotted in. the accepted values are listed here: https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.legend.html
+legend_position:
+  # - "best" | "upper right" | "upper left" | "lower right" | "lower left" | "right" | "center" |" "upper center" | "lower center" | "center right" | "center left"
+  - "best"
+  - "best"
+
+# [Optional] the same for all plot
+legend_size: 12 
+
+# [Optional] force the y limit for each plot.
+force_limit_plot_y:
+  - 40000
+
+# [Optional] same as force_limit_plot_y but for the x axis
+force_limit_plot_x:
+  - 800
+
+# [Optional] for each plot, you can specify the lower bound for the y axis
+start_plot_y:
+  - 1000
+
+# [Optional] for each plot, tell if there is a dimension for sampling
+sampling:
+  - true
+  - false
+
+# [Optional] for each plot, define what it the sampling dimension
+samplingFields:
+  - random
+  - random
+
+# [Optional] for each plot and for each label, you can specify lines styles. (see matplotlib reference for the accepted strings)
+line_styles:
+  - ['solid','dashed']
+
+# [Optional] for each plot, you can exclude labels in the title.
+excluded_titles:
+  - [0] # [1]
+
+# [Optional] for each plot, you can add a prefix in the title
+title_prefix:
+  - "a-"
+  - "b-"
+# [Optiona] for each plot, you can define the output file
+format:
+  - "pdf"
+  - "png"
