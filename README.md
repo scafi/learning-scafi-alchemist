@@ -70,7 +70,7 @@ Try the following:
 1. clone manually using `git clone https://github.com/scafi/learning-scafi-alchemist.git`
     1. alternatively: download the repository zip ([<kbd>Download!</kbd>](https://github.com/scafi/learning-scafi-alchemist/archive/refs/heads/master.zip))  
     3. then unzip the repository to a local folder
-4. open a terminal inside the clone/downloaded folder
+4. open a terminal inside the cloned/downloaded folder
 5. run `./gradlew runHelloScafi`
 
 If you still have problems executing the experiments, please consider opening an issue in which you report:
