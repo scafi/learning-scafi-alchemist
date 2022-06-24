@@ -4,20 +4,57 @@ This tutorial presents a sequence of increasingly rich examples using the [Scafi
 
 ## Requirements
 
-A [Gradle-compatible Java version](https://docs.gradle.org/current/userguide/compatibility.html) -- link to temurin
+- A [Gradle-compatible Java version](https://docs.gradle.org/current/userguide/compatibility.html) e.g., [temurin](https://adoptium.net/temurin/releases/)
+- A local installation of [Git](https://git-scm.com/)
+- [Optional] A working version of Python 3 for the plotting part
 
-**Check if it works** `java -version`
+**Check if it works** 
 
-Git
+Open a terminal and type
+```
+java -version
+git --version
+```
 
+Now you are ready to launch Alchemist & ScaFi simulations
 ## Quickstart
 
+Open a terminal and run:
+
+**Windows**
+```powershell
+curl https://raw.githubusercontent.com/scafi/learning-scafi-alchemist/master/launch.ps1 | Select-Object -ExpandProperty Content | powershell.exe
+```
+**Linux & Mac**
+```bash
+curl https://raw.githubusercontent.com/scafi/learning-scafi-alchemist/master/launch.sh | bash
+```
+
+This will open the Alchemist default GUI ([here](https://alchemistsimulator.github.io/reference/default-ui/) there are instructions on how to interact with the simulator) like this:
+![Alchemist simulation start](https://user-images.githubusercontent.com/23448811/175499943-f346221b-9308-4cf0-8402-d90ad3bc56c6.png)
+
+Then, click <kbd>P</kbd> to effectively start the simulation.
+The nodes should start to compute the ScaFi program (described [here](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/scala/it/unibo/scafi/examples/HelloWorld.scala)) producing node color changes.
+![Alchemist simulation evolution](https://user-images.githubusercontent.com/23448811/175502234-a2c5ae1a-c909-4545-ba5e-8cea0441cbd3.gif)
+<!--
 Here, a one-liner command + explanation of the GUI + animated gif of the expected result
 + gui instructions -> https://alchemistsimulator.github.io/reference/default-ui/
-(windows version?? we can test with guacamole on the labs)
+!-->
 
 ### What happened
 
+Issuing the one-liner command, you have:
+1. downloaded this repository using Git
+2. created a folder called `learning-scafi-alchemist` that contains the simulations 
+3. executed the command `./gradlew runHelloScafi` inside the `learning-scafi-alchemist` created above.
+
+The last command produces the execution of the simulation called `helloScafi` described using a `yml` [file](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/yaml/helloScafi.yml).
+Particularly an Alchemist simulation typically consists of a network of devices that could communicate with each other by means of a neighborhood relationship (you can see the connections by clicking <kbd>L</kbd>)
+![Alchemist Neibourhood Relationship](https://user-images.githubusercontent.com/23448811/175505269-cb2f6281-d7f2-40ff-9a11-fe7301166092.png)
+The simulation effects (i.e., node shapes and colors) are highly configurable through JSON [configuration](https://github.com/scafi/learning-scafi-alchemist/blob/master/effects/helloScafi.json). In this case, the node color depends on the output of the ScaFi program, which is executed in each device every 1 second. Particularly, the execution of a ScaFi program deals with local computations and interaction among neighbors through a distributed data structure called *computational field*. This distributed and repeated execution of *rounds* eventually produces a collective result (you can find more details about the execution model of ScaFi programs in the [documentation](https://scafi.github.io/docs/#execution-model)).
+
+In this case, the program consists of the evaluation of the distance from the node with the ID 100 (in Aggregate Computing literature called "gradient").
+<!--
 * download repo
 * creation folder xxx
 * command uiiuiii executed inside xxx
@@ -26,15 +63,19 @@ Here, a one-liner command + explanation of the GUI + animated gif of the expecte
 * colors based on ...
 * the simulator runs the program every x seconds
 * the interaction among devices builds the distributed data structure
-
+-->
 **Something wrong?**
 
 Try the following:
-1. clone manually using ...
-    1. alternatively: download zip 
-    3. unzip
-4. open a terminal insid zip
-5. run ...
+1. clone manually using `git clone https://github.com/scafi/learning-scafi-alchemist.git`
+    1. alternatively: download the repository zip ([<kbd>Download</kbd>](https://github.com/scafi/learning-scafi-alchemist/archive/refs/heads/master.zip!))  
+    3. then unzip the repository to a local folder
+4. open a terminal inside the clone/downloaded folder
+5. run `./gradlew runHelloScafi`
+
+If you still have problems executing the experiments, please consider opening an issue in which you report:
+- your machine configuration (OS, Java Version, ...)
+- the error reported
 
 ## Guided examples
 
@@ -49,15 +90,21 @@ from now on, we will assume all commands have been issued inside xxx
 
 ### Using the generated data with the embedded plotting script
 
-To run all the (graphic) simulations defined in src/main/yaml type:
+you can produce plots from the data generated by Alchemist simulation.
+This repository contains a highly configurable script (please look at the configuration defined in [plots](/plots)).
 
+To run the script, you should run:
 ```bash
-$ ./gradlew runAll
+$ python plotter.py plots/helloworld.yml ./build/exports/helloScafi ".*" "result" plots/ 
 ```
-To run the simulation in batch (e.g, to produce data for plots) you can type:
-```bash
-$ ./gradlew runAll -Pbatch=true -Pvariables=random
-```
+
+Where:
+- the first argument is the plot configuration (expressed using a yaml file)
+- the second argument is where the files are located 
+- the third argument is a regex used to select the simulations file
+- the fourth argument defines the initial names of the plot
+- the last argument devises the folder in which the plots will be stored
+
 
 ### A richer pattern: Self-organizing Coordination Regions
 
