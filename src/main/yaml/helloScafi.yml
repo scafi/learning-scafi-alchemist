@@ -42,7 +42,7 @@ _reactions:
         type: Event
         actions:
           - type: RunScafiProgram
-            parameters: [it.unibo.scafi.examples.HelloWorld, *retentionTime] # second argument is retention time
+            parameters: [it.unibo.scafi.examples.HelloScafi, *retentionTime] # second argument is retention time
       - program: send
   - reproduceGPS: &reproduceGPS
       type: ReproduceGPSTrace
