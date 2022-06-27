@@ -104,8 +104,9 @@ and automatically adjusts it after changes in the source set and the connectivit
 The main logic of the node behaviour is described through the Scafi program file.
 Particularly, a valid ScaFi program must:
 1. choose an incarnation
-<!-- MARKDOWN-AUTO-DOCS:START (CODE:src=./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala&lines=3-4) -->
-<!-- The below code snippet is automatically added from ./code-that-i-want-in-readme.js -->
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L3-L3 -->
+```scala
+```
 2. extend the `AggregateProgram` trait
 3. define the behaviour inside the `main` method.
 #### Minimal changes
