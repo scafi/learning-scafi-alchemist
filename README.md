@@ -30,16 +30,19 @@ curl https://raw.githubusercontent.com/scafi/learning-scafi-alchemist/master/lau
 curl https://raw.githubusercontent.com/scafi/learning-scafi-alchemist/master/launch.sh | bash
 ```
 
-This will open the Alchemist default GUI ([here](https://alchemistsimulator.github.io/reference/default-ui/) there are instructions on how to interact with the simulator) like this:
+It will take some time for the system to download all the required dependencies,
+at the end of the process you will be presented
+the Alchemist default GUI
+([here](https://alchemistsimulator.github.io/reference/default-ui/) are instructions on how to interact with the simulator).
+At this point, the simulation should be looking like:
 ![Alchemist simulation start](https://user-images.githubusercontent.com/23448811/175499943-f346221b-9308-4cf0-8402-d90ad3bc56c6.png)
 
-Then, click <kbd>P</kbd> to effectively start the simulation.
-The nodes should start to compute the ScaFi program (described [here](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/scala/it/unibo/scafi/examples/HelloWorld.scala)) producing node color changes.
+Click <kbd>P</kbd> to start the simulation.
+The nodes will compute the ScaFi program described
+[here](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/scala/it/unibo/scafi/examples/HelloWorld.scala))
+in rounds,
+producing node color changes.
 ![Alchemist simulation evolution](https://user-images.githubusercontent.com/23448811/175502234-a2c5ae1a-c909-4545-ba5e-8cea0441cbd3.gif)
-<!--
-Here, a one-liner command + explanation of the GUI + animated gif of the expected result
-+ gui instructions -> https://alchemistsimulator.github.io/reference/default-ui/
-!-->
 
 ### What happened
 
