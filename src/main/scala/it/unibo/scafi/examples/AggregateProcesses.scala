@@ -36,8 +36,7 @@ class AggregateProcesses extends AggregateProgram
     node.put(EXPORT_NUMBER_OF_PROCESSES, maps.size)
   }
 
-  // TODO: fix remove to perform the check
-  def removeMolecule(name: String) = if(node.has(name)) node.remove(name)
+  def removeMolecule(name: String): Unit = if(node.has(name)) node.remove(name)
 
   case class Pid(src: ID = mid(), time: Long = alchemistTimestamp.toDouble.toLong)
                 (val terminateAt: Long = Long.MaxValue)

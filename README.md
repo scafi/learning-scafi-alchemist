@@ -109,7 +109,26 @@ Particularly, a valid ScaFi program must:
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist._
 ```
 2. extend the `AggregateProgram` trait
-3. define the behaviour inside the `main` method.
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L6-L6 -->
+```scala
+```
+3. mix-in the libraries required for the application
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L7-L7 -->
+```scala
+```
+
+4. define the behaviour inside the `main` method.
+
+A ScaFi program typically deals with environments information through **sensors**. 
+`sense[Type](name)` is the built-in operators used to queries the sensor attached to each nodes. Each *molecule* expressed in the yaml (i.e., the Alchemist variable concept) can be queryied from the ScaFi file. For instance, in helloScafi, we write:
+<!-- embedme .src/main/yaml/helloScafi.yml#L63-L66 -->
+```scala
+```
+Therefore, in the program we can get the `test` value as:
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L11-L12 -->
+```scala
+```
+
 #### Minimal changes
 
 1. As described above, the program is *self-healing*, so try to move node and see how the system eventually reach a stable condition:
