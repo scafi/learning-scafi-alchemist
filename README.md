@@ -106,6 +106,7 @@ Particularly, a valid ScaFi program must:
 1. choose an incarnation
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L3-L3 -->
 ```scala
+import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist._
 ```
 2. extend the `AggregateProgram` trait
 3. define the behaviour inside the `main` method.
