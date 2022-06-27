@@ -53,3 +53,11 @@ jobs:
     steps:
       - name: Verify that there were no failures
         run: ${{ !contains(join(needs.*.result, ','), 'failure') }}
+
+  UpdateDoc:
+    runs-on: ${{ matrix.os }}-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.0.2
+      - name: Markdown autodocs
+      - uses: dineshsonachalam/markdown-autodocs@v1.0.4
