@@ -126,7 +126,7 @@ A ScaFi program typically deals with environments information through **sensors*
 <!-- embedme ./src/main/yaml/helloScafi.yml#L63-L64 -->
 ```yaml
 - molecule: test
-  concentration: *source
+  concentration: *source # anchor to "source" value, check line 17
 ```
 Therefore, in the program we can get the `test` value as:
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L11-L12 -->
