@@ -4,8 +4,8 @@ import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist._
 
 import scala.concurrent.duration.FiniteDuration
 
-class HelloScafi extends AggregateProgram with StandardSensors with ScafiAlchemistSupport
-  with BlockG with Gradients with FieldUtils {
+class HelloScafi extends AggregateProgram
+  with StandardSensors with ScafiAlchemistSupport with BlockG with Gradients with FieldUtils {
   override def main(): Any = {
     checkSensors()
     // Access to node state through "molecule"
@@ -18,7 +18,7 @@ class HelloScafi extends AggregateProgram with StandardSensors with ScafiAlchemi
     g
   }
 
-  /* operation on neighbours */
+  /* operation on neighbours and built-in sensors (cf., currentTime and deltaTime()) */
   def checkSensors(): Unit = {
     val timestamp: it.unibo.scafi.time.TimeAbstraction#Time = currentTime()
     val delta: FiniteDuration = deltaTime()

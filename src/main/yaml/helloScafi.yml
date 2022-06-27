@@ -14,13 +14,13 @@ variables:
     language: scala
 
 _constants:
+  source: &source 100
   retentionTime: &retentionTime 5.0
   gpsTraceFile: &gpsTraceFile "vcmuser.gpx"
   programRate: &programRate 1.0
   exportInterval: &exportInterval 1.0
   totalNodes: &totalNodes 1497
   timeToAlign: &timeToAlign 1365922800
-  source: &source 100
 
 seeds:
   scenario: *random
@@ -61,7 +61,7 @@ deployments:
     - *program
   contents:
     - molecule: test
-      concentration: *source
+      concentration: *source # anchor to "source" value, check line 17
     - molecule: g
       concentration: Double.PositiveInfinity
 

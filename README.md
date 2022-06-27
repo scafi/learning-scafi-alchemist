@@ -109,21 +109,24 @@ Particularly, a valid ScaFi program must:
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist._
 ```
 2. extend the `AggregateProgram` trait
-<!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L6-L6 -->
-```scala
-```
-3. mix-in the libraries required for the application
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L7-L7 -->
 ```scala
-class HelloScafi extends AggregateProgram with StandardSensors with ScafiAlchemistSupport
+class HelloScafi extends AggregateProgram
+```
+3. mix-in the libraries required for the application
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L8-L8 -->
+```scala
+with StandardSensors with ScafiAlchemistSupport with BlockG with Gradients with FieldUtils {
 ```
 
 4. define the behaviour inside the `main` method.
 
 A ScaFi program typically deals with environments information through **sensors**. 
-`sense[Type](name)` is the built-in operators used to queries the sensor attached to each nodes. Each *molecule* expressed in the yaml (i.e., the Alchemist variable concept) can be queryied from the ScaFi file. For instance, in helloScafi, we write:
-<!-- embedme .src/main/yaml/helloScafi.yml#L63-L66 -->
-```scala
+`sense[Type](name)` is the built-in operators used to query the sensors attached to each node. Each *molecule* expressed in the yaml (i.e., the Alchemist variable concept) can be queried from the ScaFi program. For instance, in helloScafi, we write:
+<!-- embedme ./src/main/yaml/helloScafi.yml#L63-L64 -->
+```yaml
+- molecule: test
+  concentration: *source
 ```
 Therefore, in the program we can get the `test` value as:
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L11-L12 -->
@@ -131,7 +134,7 @@ Therefore, in the program we can get the `test` value as:
 // Access to node state through "molecule"
 val source = sense[Int]("test") // Alchemist API => node.get("test")
 ```
-
+There are several built-sensors (in `checkSensors` there are example about local sensor and neighbouring sensor). For more details, please check the [Scaladoc]()
 #### Minimal changes
 
 1. As described above, the program is *self-healing*, so try to move node and see how the system eventually reach a stable condition:
