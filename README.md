@@ -140,6 +140,8 @@ Where:
 
 #### What happened
 This example shows an interesting pattern developed with ScaFi, the so-called Self-Organising Coordination Regions (SCR).
+(more details in (Self-organising Coordination Regions: A Pattern for
+Edge Computing)[https://hal.inria.fr/hal-02365498/document])
 
 The idea of SCR is to organize a distributed activity
  into multiple spatial **regions** (inducing a partition of the system),
