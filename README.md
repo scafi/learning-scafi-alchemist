@@ -115,6 +115,7 @@ import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist._
 3. mix-in the libraries required for the application
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L7-L7 -->
 ```scala
+class HelloScafi extends AggregateProgram with StandardSensors with ScafiAlchemistSupport
 ```
 
 4. define the behaviour inside the `main` method.
@@ -127,6 +128,8 @@ A ScaFi program typically deals with environments information through **sensors*
 Therefore, in the program we can get the `test` value as:
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L11-L12 -->
 ```scala
+// Access to node state through "molecule"
+val source = sense[Int]("test") // Alchemist API => node.get("test")
 ```
 
 #### Minimal changes
