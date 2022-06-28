@@ -34,14 +34,14 @@ It will take some time for the system to download all the required dependencies,
 at the end of the process you will be presented
 the Alchemist default GUI
 ([here](https://alchemistsimulator.github.io/reference/default-ui/) are instructions on how to interact with the simulator).
-At this point, the simulation should be looking like:
+At this point, the simulation should be looking like this:
 ![Alchemist simulation start](https://user-images.githubusercontent.com/23448811/175499943-f346221b-9308-4cf0-8402-d90ad3bc56c6.png)
 
 Click <kbd>P</kbd> to start the simulation.
 The nodes will compute the ScaFi program described
 [here](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/scala/it/unibo/scafi/examples/HelloWorld.scala))
 in rounds,
-producing node color changes.
+producing node colour changes.
 ![Alchemist simulation evolution](https://user-images.githubusercontent.com/23448811/175502234-a2c5ae1a-c909-4545-ba5e-8cea0441cbd3.gif)
 
 ### What happened
@@ -52,10 +52,10 @@ Issuing the one-liner command, you have:
 3. executed the command `./gradlew runHelloScafi` inside the `learning-scafi-alchemist` created above.
 
 The last command produces the execution of the simulation called `helloScafi` described using a `yml` [file](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/yaml/helloScafi.yml).
-Particularly an Alchemist simulation typically consists of a network of devices that could communicate with each other by means of a neighborhood relationship (you can see the connections by clicking <kbd>L</kbd>)
+Particularly an Alchemist simulation typically consists of a network of devices that could communicate with each other by means of a neighbourhood relationship (you can see the connections by clicking <kbd>L</kbd>)
 ![Alchemist Neibourhood Relationship](https://user-images.githubusercontent.com/23448811/175505269-cb2f6281-d7f2-40ff-9a11-fe7301166092.png)
-In this case, the nodes' position are configured through real GPS traces from the Vienna marathon app.
-The simulation effects (i.e., node shapes and colors) are highly configurable through JSON [configuration](https://github.com/scafi/learning-scafi-alchemist/blob/master/effects/helloScafi.json). Here the node color depends on the output of the ScaFi program, which is executed in each device every 1 second. Particularly, the execution of a ScaFi program deals with local computations and interaction among neighbors through a distributed data structure called *computational field*. This distributed and repeated execution of *rounds* eventually produces a collective result (you can find more details about the execution model of ScaFi programs in the [documentation](https://scafi.github.io/docs/#execution-model)).
+In this case, the nodes' positions are configured through real GPS traces from the Vienna marathon app.
+The simulation effects (i.e., node shapes and colours) are highly configurable through JSON [configuration](https://github.com/scafi/learning-scafi-alchemist/blob/master/effects/helloScafi.json). Here the node colour depends on the output of the ScaFi program, which is executed in each device every 1 second. Particularly, the execution of a ScaFi program deals with local computations and interaction among neighbours through a distributed data structure called *computational field*. This distributed and repeated execution of *rounds* eventually produces a collective result (you can find more details about the execution model of ScaFi programs in the [documentation](https://scafi.github.io/docs/#execution-model)).
 
 In this case, the program consists of the evaluation of the distance from the node with the ID 100 (in Aggregate Computing literature called "gradient").
 <!--
@@ -119,26 +119,26 @@ with StandardSensors with ScafiAlchemistSupport with BlockG with Gradients with 
 
 4. define the behaviour inside the `main` method.
 
-A ScaFi program typically deals with environments information through **sensors**. 
-`sense[Type](name)` is the built-in operators used to query the sensors attached to each node. Each *molecule* expressed in the yaml (i.e., the Alchemist variable concept) can be queried from the ScaFi program. For instance, in helloScafi, we write:
+A ScaFi program typically deals with environment information through **sensors**. 
+`sense[Type](name)` is the built-in operator used to query the sensors attached to each node. Each *molecule* expressed in the yaml (i.e., the Alchemist variable concept) can be queried from the ScaFi program. For instance, in helloScafi, we write:
 <!-- embedme ./src/main/yaml/helloScafi.yml#L63-L64 -->
 ```yaml
 - molecule: test
   concentration: *source # anchor to "source" value, check line 17
 ```
-Therefore, in the program we can get the `test` value as:
+Therefore, in the program, we can get the `test` value as:
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L11-L12 -->
 ```scala
 // Access to node state through "molecule"
 val source = sense[Int]("test") // Alchemist API => node.get("test")
 ```
-There are several built-sensors (in `checkSensors` there are examples about local sensors and neighbouring sensors). For more details, please check the [Scaladoc](http://scafi-docs.surge.sh/it/unibo/scafi/index.html)
+There are several built-sensors (in `checkSensors` there are examples of local sensors and neighbouring sensors). For more details, please check the [Scaladoc](http://scafi-docs.surge.sh/it/unibo/scafi/index.html)
 #### Minimal changes
 
-1. As described above, the program is *self-healing*, so try to move node and see how the system eventually reach a stable condition:
-    - click <kbd>S</kbd> to enter in selection mode
-    - start a selection by clicking the mouse left button and dragging into the enviroment
-    - once your selection is over, click <kbd>O</kbd> to enter in move mode
+1. As described above, the program is *self-healing*, so try to move node and see how the system eventually reaches a stable condition:
+    - click <kbd>S</kbd> to enter into selection mode
+    - start a selection by clicking the mouse left button and dragging it into the environment
+    - once your selection is over, click <kbd>O</kbd> to enter into move mode
     - click over the selection and drag the element into another position
 ![Alchemist Move elements](https://user-images.githubusercontent.com/23448811/175920712-e193cf6d-6797-46e9-bc02-c0218f3bf583.gif)
 2. Try to modify the source node (via yml configuration) and check the program output differences
