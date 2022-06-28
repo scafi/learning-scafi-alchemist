@@ -99,6 +99,39 @@ and automatically adjusts it after changes in the source set and the connectivit
 |-|-|
 | [helloScafi.yml](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/yaml/helloScafi.yml) | [HelloScafi.scala](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/scala/it/unibo/scafi/examples/HelloScafi.scala) |
 
+An Alchemist simulation could be described through yml configurations.
+In order to execute ScaFi script, you should at least define:
+
+- the Scafi incarnation:
+<!-- embedme ./src/main/yaml/helloScafi.yml#L1-L1 -->
+```yml
+incarnation: scafi
+```
+- a `Reaction` that contains the `Action` `RunScafiProgram` with the full class name of the program chosen 
+<!-- embedme ./src/main/yaml/helloScafi.yml#L37-L46 -->
+```yml
+_reactions:
+  - program: &program
+      - time-distribution:
+          type: ExponentialTime
+          parameters: [*programRate]
+        type: Event
+        actions:
+          - type: RunScafiProgram
+            parameters: [it.unibo.scafi.examples.HelloScafi, *retentionTime]
+      - program: send
+```
+- a deployment that contains in the programs the Action specified above
+<!-- embedme ./src/main/yaml/helloScafi.yml#L56-L60 -->
+```yml
+deployments: ## i.e, how to place nodes
+  type: FromGPSTrace ## place nodes from gps traces
+  parameters: [*totalNodes, *gpsTraceFile, true, "AlignToTime", *timeToAlign, false, false]
+  programs: ## the reactions installed in each nodes
+    - *program
+```
+More details about the Alchemist configuration could be found in the [official guide](http://alchemistsimulator.github.io/reference/yaml/).
+
 The main logic of the node behaviour is described through the Scafi program file.
 Particularly, a valid ScaFi program must:
 1. choose an incarnation
@@ -132,7 +165,15 @@ Therefore, in the program, we can get the `test` value as:
 // Access to node state through "molecule"
 val source = sense[Int]("test") // Alchemist API => node.get("test")
 ```
-There are several built-sensors (in `checkSensors` there are examples of local sensors and neighbouring sensors). For more details, please check the [Scaladoc](http://scafi-docs.surge.sh/it/unibo/scafi/index.html)
+There are several built-sensors (in `checkSensors` there are examples of local sensors and neighbouring sensors).
+For more details, please check the [Scaladoc](http://scafi-docs.surge.sh/it/unibo/scafi/index.html).
+The main logic of the program is expressed in the following line:
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/HelloScafi.scala#L13-L14 -->
+```scala
+// An aggregate operation
+val g = classicGradient(mid() == source)
+```
+Where `classicGradient` is a function defined in `BlockG` that implements the self-healing gradient described above. The first argument is a `Boolean` field that defines which part of the system could be considered a *source* zone. In this case, nodes are marked as source when the field of ids (i.e., `mid()`)  is equal to the value passed through the variable `test`. This can be expressed as `mid() == source`.
 #### Minimal changes
 
 1. As described above, the program is *self-healing*, so try to move node and see how the system eventually reaches a stable condition:

@@ -42,23 +42,23 @@ _reactions:
         type: Event
         actions:
           - type: RunScafiProgram
-            parameters: [it.unibo.scafi.examples.HelloScafi, *retentionTime] # second argument is retention time
+            parameters: [it.unibo.scafi.examples.HelloScafi, *retentionTime]
       - program: send
   - reproduceGPS: &reproduceGPS
       type: ReproduceGPSTrace
       parameters: [ *gpsTraceFile, true, "AlignToTime", *timeToAlign, false, false ]
-  - pool: &move
+  - move: &move
       - time-distribution: *moveFrequency
         type: Event
         actions:
           - *reproduceGPS
 
-deployments:
-  type: FromGPSTrace
+deployments: ## i.e, how to place nodes
+  type: FromGPSTrace ## place nodes from gps traces
   parameters: [*totalNodes, *gpsTraceFile, true, "AlignToTime", *timeToAlign, false, false]
-  programs:
-    - *move
+  programs: ## the reactions installed in each nodes
     - *program
+    - *move
   contents:
     - molecule: test
       concentration: *source # anchor to "source" value, check line 17
