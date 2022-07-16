@@ -327,8 +327,9 @@ Particularly, `sspawn` accepts:
     - Finally, the `Pout[Double]` is the process output. `Pout` is a data structure that contains the output of the process and the status of the process (that could be `Output`, `Terminated` and `External`---more details in the paper).
 - The key set of the process that will be spawn (`pids`)
     - In this case, the new `pids` associated to new processes are selected from Alchemist molecule. 
-     <!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L11-L12 -->
+     <!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L11-L11 -->
      ```scala
+     def processesSpec: Map[Int,(Int,Int)] = sense(MOLECULE_PROCS)
      ```
     - From this information il will be created the `pids` for the processes:
     <!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L18-L22 -->
@@ -339,6 +340,25 @@ Particularly, `sspawn` accepts:
     val pids: Set[Pid] = procs.filter(tgen => tgen.device == mid() && t > tgen.startTime && (t - 5) < tgen.startTime)
       .map(tgen => Pid(time = tgen.startTime)(terminateAt = tgen.endTime))
     ```
+
+Particularly, in this case, the process logic is quite simple:
+- it produces a potential field from the processes creator
+- it terminates if the `terminateAt` is reached
+- the nodes that belong to nodes are the ones that are inside the `bubble`, that is the nodes inside an area of 200 units
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L44-L50 -->
+```scala
+def process(pid: Pid)(src: Unit = ()): POut[Double] = {
+  val g = classicGradient(pid.src==mid())
+  val s = if(pid.src==mid() && pid.terminateAt.toDouble <= alchemistTimestamp.toDouble){
+    Terminated
+  } else if(g < 200) Output else External
+  POut(g, s)
+}
+```
+#### Minimal changes
+- Try to add the extension of the `bubble` as a parameter (as the start and end time)
+- Even in this case, the computation is self-healing. Therefore, try to move the process center to see how the system reacts
+- Try to add other processess (see the yaml configuration)
 ## External resources to improve your understanding
 
 - The Alchemist metamodel: https://alchemistsimulator.github.io/explanation/
