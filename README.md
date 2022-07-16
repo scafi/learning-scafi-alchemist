@@ -92,7 +92,7 @@ from now on, we will assume all commands have been issued inside `learning-scafi
 
 #### What happened
 This is the example described in [Quickstart](#quickstart) section.
-Particularly, the program consists in the description of the self-healing gradient: an algorithm that computes a gradient (i.e.,  a field mapping each device in the system with its minimum distance from the closest *source* device) field
+Particularly, the program consists of the description of the self-healing gradient: an algorithm that computes a gradient (i.e.,  a field mapping each device in the system with its minimum distance from the closest *source* device) field
 and automatically adjusts it after changes in the source set and the connectivity network (more details about gradients can be found in [Compositional Blocks for Optimal Self-Healing Gradients](https://ieeexplore-ieee-org.ezproxy.unibo.it/document/8064033)).
 #### What is inside
 |Configuration File|ScaFi Program File|
@@ -244,14 +244,35 @@ The idea of SCR is to organize a distributed activity
  each one controlled by a **leader** device,
  which collects data from the area members
  and spreads decisions to enact some area-wide policy.
+ Particularly, when you launch the command of SCR you will see something like this:
 
 ![SCR result](https://user-images.githubusercontent.com/23448811/175658741-08537743-a325-4137-be14-a4dd6532237b.gif)
 
+Where the colour denotes the potential field (i.e., the gradient) that starts from the selected leader.
+In this GIF, the leaders are the ones marked with blue colour.
 #### What is inside 
 |Configuration File|ScaFi Program File|
 |-|-|
 | [selforgCoordRegions.yml](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/yaml/selforgCoordRegions.yml) | [SelforganisingCoordinationRegions.scala](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/scala/it/unibo/scafi/examples/SelforganisingCoordinationRegions.scala) |
 
+
+The SCR pattern consists of four main phases:
+1. leader election: using block `S` the system will produce a distributed leader election that tries to divide the system equally with a certain range (in S term, it is called `grain`):
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/SelforganisingCoordinationRegions.scala#L14-L15 -->
+```scala
+```
+2. potential field definition: after the leader election process, there is another phase in which will be computed potential field from the leader. In this way, the slave node could send information to leader's
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/SelforganisingCoordinationRegions.scala#L16-L17 -->
+```scala
+```
+3. collection phase: the slave node could collect local information (e.g., temperature) and send it to the leader. During the path, it will be an aggregation process that combines local information with area information (i.e., all the nodes that are inside the potential field of a leader) 
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/SelforganisingCoordinationRegions.scala#L18-L19 -->
+```scala
+```
+4. leader choice and share: with the information collected inside an area, the leader could perform an area-wide decision and then send it to the whole area (using `G`)
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/SelforganisingCoordinationRegions.scala#L20-L22 -->
+```scala
+```   
 
 #### Minimal changes
 
@@ -261,6 +282,9 @@ The idea of SCR is to organize a distributed activity
 ./gradlew runAggregateProcesses
 ```
 #### What happened
+This example shows an application of Aggregate Processes, 
+ which is s a way to specify a dynamic number of collective 
+ computations running on dynamic ensembles of devices.
 ![Processes API](https://user-images.githubusercontent.com/23448811/175660568-9906a920-d701-48ce-a0de-a0d6fa146425.gif)
 
 #### What is inside
