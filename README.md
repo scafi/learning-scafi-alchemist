@@ -284,6 +284,10 @@ val head = G[ID](leader, mid(), identity, metric = nbrRange)
 ```   
 
 #### Minimal changes
+1. Try to change the grain (check in the configuration file). It would lead to changes in area formation
+2. Try to count the number of nodes inside an area and share this information with that area---suggestion: change phase 3. of the SCR
+3. As in the previous example, the areas are self-healing. Therefore try to move leaders and see what happens in the leader formation. Try to remove nodes too (see the next clip)
+![ezgif com-gif-maker](https://user-images.githubusercontent.com/23448811/179356424-bd31b95a-e38a-491a-80d3-cc448059e484.gif)
 
 ### 3. Overlapping computations in space and time with aggregate processes
 
@@ -293,16 +297,43 @@ val head = G[ID](leader, mid(), identity, metric = nbrRange)
 #### What happened
 This example shows an application of Aggregate Processes, 
  which is s a way to specify a dynamic number of collective 
- computations running on dynamic ensembles of devices (more details in ). 
+ computations running on dynamic ensembles of devices (more details in [Engineering collective intelligence at the edge with aggregate processes](https://www.sciencedirect.com/science/article/abs/pii/S0952197620303389)). 
 ![Processes API](https://user-images.githubusercontent.com/23448811/175660568-9906a920-d701-48ce-a0de-a0d6fa146425.gif)
 
+The processes are the bigger circle around the nodes. The colour identifies the process ID. As you can see,
+during the simulation the process starts, shrink and then could disappear.
 #### What is inside
 |Configuration File|ScaFi Program File|
 |-|-|
 | [aggregateProcesses.yml](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/yaml/aggregateProcesses.yml) | [SelforganisingCoordinationRegions.scala](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala) |
 
 #### Minimal changes
+To start the process, you can use the `spawn` operators (and their variation, `sspawn`, `cspawn`, etc.):
 
+<!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L24-L24 -->
+```scala
+val maps = sspawn[Pid,Unit,Double](process, pids, {})
+```
+
+Particularly, `sspawn` accepts:
+- the process logic, that is a function `ID => Input => Pout[Out]`
+    - `ID` in this case is a `case class` that contains the `id` of a node that will start the process, the time in which it will effectively start and finally the time in which it will end.
+    <!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L41-L42 -->
+    ```scala
+    case class Pid(src: ID = mid(), time: Long = alchemistTimestamp.toDouble.toLong)
+                  (val terminateAt: Long = Long.MaxValue)
+    ```
+    - The input of the process (in this case is empty)
+    - Finally, the `Pout[Double]` is the process output. `Pout` is a data structure that contains the output of the process and the status of the process (that could be `Output`, `Terminated` and `External`---more details in the paper).
+- The key set of the process that will be spawn (`pids`)
+    - In this case, the new `pids` associated to new processes are selected from Alchemist molecule. 
+     <!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L11-L12 -->
+     ```scala
+     ```
+    - From this information il will be created the `pids` for the processes:
+    <!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L18-L22 -->
+    ```scala
+    ```
 ## External resources to improve your understanding
 
 - The Alchemist metamodel: https://alchemistsimulator.github.io/explanation/
