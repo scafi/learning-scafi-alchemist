@@ -29,17 +29,6 @@ class SelforganisingCoordinationRegions extends AggregateProgram with StandardSe
     node.put(Exports.ISSUES, excludingSelf.anyHood(nbr { head } == head & nbr { info } != info))
   }
 
-  // Fix for S
-  override def G[V](source: Boolean, field: V, acc: V => V, metric: () => Double): V =
-    rep((Double.MaxValue, field)) { case (dist, value) =>
-      mux(source) {
-        (0.0, field)
-      } {
-        excludingSelf
-          .minHoodSelector(nbr { dist } + metric())((nbr { dist } + metric(), acc(nbr { value })))
-          .getOrElse((Double.PositiveInfinity, field))
-      }
-    }._2
 }
 object SelforganisingCoordinationRegions {
   object Exports {
