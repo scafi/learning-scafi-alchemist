@@ -333,6 +333,11 @@ Particularly, `sspawn` accepts:
     - From this information il will be created the `pids` for the processes:
     <!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L18-L22 -->
     ```scala
+    // Determine the processes to be generated (these are provided in a molecule "procs")
+    val procs: Set[ProcessSpec] = processesSpec.map(tp => ProcessSpec.fromTuple(tp._1, tp._2)).toSet
+    val t = alchemistTimestamp.toDouble.toLong
+    val pids: Set[Pid] = procs.filter(tgen => tgen.device == mid() && t > tgen.startTime && (t - 5) < tgen.startTime)
+      .map(tgen => Pid(time = tgen.startTime)(terminateAt = tgen.endTime))
     ```
 ## External resources to improve your understanding
 
