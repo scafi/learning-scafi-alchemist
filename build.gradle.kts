@@ -81,3 +81,10 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
         // task.dependsOn(classpathJar) // Uncomment to switch to jar-based classpath resolution
         runAll.dependsOn(task)
     }
+
+tasks.withType<Tar>().configureEach {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+}
+tasks.withType<Zip>().configureEach {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+}
