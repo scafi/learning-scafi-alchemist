@@ -260,18 +260,27 @@ The SCR pattern consists of four main phases:
 1. leader election: using block `S` the system will produce a distributed leader election that tries to divide the system equally with a certain range (in S term, it is called `grain`):
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/SelforganisingCoordinationRegions.scala#L14-L15 -->
 ```scala
+// Sparse choice (leader election) of the cluster heads
+val leader = S(sense(Params.GRAIN), metric = nbrRange)
 ```
 2. potential field definition: after the leader election process, there is another phase in which will be computed potential field from the leader. In this way, the slave node could send information to leader's
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/SelforganisingCoordinationRegions.scala#L16-L17 -->
 ```scala
+// G block to run a gradient from the leaders
+val g = distanceTo(leader, metric = nbrRange)
 ```
 3. collection phase: the slave node could collect local information (e.g., temperature) and send it to the leader. During the path, it will be an aggregation process that combines local information with area information (i.e., all the nodes that are inside the potential field of a leader) 
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/SelforganisingCoordinationRegions.scala#L18-L19 -->
 ```scala
+// C block to collect information towards the leaders
+val c = C[Double,Set[ID]](g, _++_, Set(mid()), Set.empty)
 ```
 4. leader choice and share: with the information collected inside an area, the leader could perform an area-wide decision and then send it to the whole area (using `G`)
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/SelforganisingCoordinationRegions.scala#L20-L22 -->
 ```scala
+// G block to propagate decisions or aggregated info from leaders to members
+val info = G[Set[ID]](leader, c, identity, metric = nbrRange)
+val head = G[ID](leader, mid(), identity, metric = nbrRange)
 ```   
 
 #### Minimal changes
@@ -284,7 +293,7 @@ The SCR pattern consists of four main phases:
 #### What happened
 This example shows an application of Aggregate Processes, 
  which is s a way to specify a dynamic number of collective 
- computations running on dynamic ensembles of devices.
+ computations running on dynamic ensembles of devices (more details in ). 
 ![Processes API](https://user-images.githubusercontent.com/23448811/175660568-9906a920-d701-48ce-a0de-a0d6fa146425.gif)
 
 #### What is inside
