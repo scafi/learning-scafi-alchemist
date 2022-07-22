@@ -3,8 +3,8 @@ package it.unibo.scafi.examples
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist._
 import it.unibo.scafi.utils.MovementUtils
 
-class AggregateProcesses extends AggregateProgram with StandardSensors with ScafiAlchemistSupport
-  with BlockG with CustomSpawn with Gradients with MovementUtils {
+class AggregateProcesses extends AggregateProgram
+  with StandardSensors with ScafiAlchemistSupport with BlockG with CustomSpawn with Gradients with MovementUtils {
   import SpawnInterface._
   import AggregateProcesses._
 
@@ -26,15 +26,17 @@ class AggregateProcesses extends AggregateProgram with StandardSensors with Scaf
     if(maps.nonEmpty) {
       node.put(EXPORT_PID, Math.abs(maps.maxBy(_._1.time)._1.hashCode()) % 100)
       node.put(EXPORT_G, maps.maxBy(_._1.time)._2)
-    } else { removeMolecule(EXPORT_PID); removeMolecule(EXPORT_G); }
+    } else {
+      removeMolecule(EXPORT_PID)
+      removeMolecule(EXPORT_G)
+    }
 
     rectangleWalk()
     node.put(EXPORT_PROCESS_KEYSET, maps.keySet)
     node.put(EXPORT_NUMBER_OF_PROCESSES, maps.size)
   }
 
-  // TODO: fix remove to perform the check
-  def removeMolecule(name: String) = if(node.has(name)) node.remove(name)
+  def removeMolecule(name: String): Unit = if(node.has(name)) node.remove(name)
 
   case class Pid(src: ID = mid(), time: Long = alchemistTimestamp.toDouble.toLong)
                 (val terminateAt: Long = Long.MaxValue)
