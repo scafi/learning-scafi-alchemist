@@ -10,5 +10,5 @@ alchemist-incarnation-scafi = { module = "it.unibo.alchemist:alchemist-incarnati
 alchemist = ["alchemist", "alchemist-incarnation-scafi", "alchemist-swingui"]
 
 [plugins]
-multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:0.4.13"
+multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:0.4.14"
 taskTree = "com.dorongold.task-tree:2.1.0"
