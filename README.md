@@ -213,7 +213,7 @@ Particularly, this command:
 will run several simulations in batch, one for each possible value of the random variables (six in this case, as expressed in the [helloScafi.yml](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/yaml/helloScafi.yml#L4-L8)). Each simulation, will produce a csv file in `$exportPath/$fileNameRoot-randomValue.$fileExtension` (in this case, build/exports/helloScafi/experiment-x.txt, the values starting with $ are gathered from the simulation configuration file). 
 
 Typically, we use these data to produce charts that express the dynamics of the collective system.
-This repository contains a highly configurable script (please look at the configuration defined in [plots](/plots)).
+This repository contains a highly configurable script (please look at the configuration defined in [plots](https://github.com/scafi/learning-scafi-alchemist/tree/master/plots)).
 
 To run the script for this experiment, you should run:
 ```bash
