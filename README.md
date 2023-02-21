@@ -39,7 +39,7 @@ At this point, the simulation should be looking like this:
 
 Click <kbd>P</kbd> to start the simulation.
 The nodes will compute the ScaFi program described
-[here](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/scala/it/unibo/scafi/examples/HelloWorld.scala))
+[here](https://github.com/scafi/learning-scafi-alchemist/blob/master/src/main/scala/it/unibo/scafi/examples/HelloScafi.scala))
 in rounds,
 producing node colour changes.
 ![Alchemist simulation evolution](https://user-images.githubusercontent.com/23448811/175502234-a2c5ae1a-c909-4545-ba5e-8cea0441cbd3.gif)
