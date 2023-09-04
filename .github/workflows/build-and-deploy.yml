@@ -28,7 +28,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout
-        uses: actions/checkout@v3.6.0
+        uses: actions/checkout@v4.0.0
       - name: Check the simulations on CI
         uses: DanySK/build-check-deploy-gradle-action@2.2.8
         with:
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.6.0
+        uses: actions/checkout@v4.0.0
         with:
           ref: ${{ github.head_ref }}
       - name: Update readme
