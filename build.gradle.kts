@@ -17,7 +17,7 @@ dependencies {
 }
 
 multiJvm {
-    jvmVersionForCompilation.set(11)
+    jvmVersionForCompilation.set(17)
 }
 
 val batch: String by project
@@ -61,19 +61,36 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
                 }
             )
             // These are the program arguments
-            args("-y", it.absolutePath, "-e", "$exportsDir/${it.nameWithoutExtension}-${System.currentTimeMillis()}")
+            args("run", it.absolutePath)
             if (System.getenv("CI") == "true" || batch == "true") {
                 // If it is running in a Continuous Integration environment, use the "headless" mode of the simulator
                 // Namely, force the simulator not to use graphical output.
-                args("-hl", "-t", maxTime)
-                if(variables.isNotEmpty()) {
-                    args("-var")
-                    variables.split(",").forEach { args(it) }
-                }
+                args(
+
+                    "--override",
+                    "terminate: { type: AfterTime, parameters: [$maxTime] }",
+                    "--override",
+                    """
+                    launcher: {
+                        parameters: {
+                            batch: [ ],
+                            showProgress: true,
+                            autoStart: true,
+                            parallelism: 1,
+                        }
+                    }
+                """.trimIndent())
             } else {
                 // A graphics environment should be available, so load the effects for the UI from the "effects" folder
                 // Effects are expected to be named after the simulation file
-                args("-g", "effects/${it.nameWithoutExtension}.json")
+                args(
+                    "--override",
+                    "monitors: { type: SwingGUI, parameters: { graphics: effects/${it.nameWithoutExtension}.json } }",
+                    "--override",
+                    "launcher: { parameters: { batch: [], autoStart: false } }",
+                    "--override",
+                    "terminate: { type: AfterTime, parameters: [$maxTime] }"
+                )
             }
             // This tells gradle that this task may modify the content of the export directory
             outputs.dir(exportsDir)
