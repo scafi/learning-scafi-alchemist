@@ -69,7 +69,7 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
                     """
                     launcher: {
                         parameters: {
-                            batch: [ repetition ],
+                            batch: [ ],
                             showProgress: true,
                             autoStart: true,
                             parallelism: 1,
