@@ -74,8 +74,10 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
                             autoStart: true,
                             parallelism: 1,
                         }
-                    }
-                """.trimIndent())
+                    },
+                """.trimIndent(),
+                    "--override",
+                    "terminate: { type: AfterTime, parameters: [$maxTime] }")
             } else {
                 // A graphics environment should be available, so load the effects for the UI from the "effects" folder
                 // Effects are expected to be named after the simulation file
@@ -84,8 +86,6 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
                     "monitors: { type: SwingGUI, parameters: { graphics: effects/${it.nameWithoutExtension}.json } }",
                     "--override",
                     "launcher: { parameters: { batch: [], autoStart: false } }",
-                    "--override",
-                    "terminate: { type: AfterTime, parameters: [$maxTime] }"
                 )
             }
             // This tells gradle that this task may modify the content of the export directory
