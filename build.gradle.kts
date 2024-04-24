@@ -65,7 +65,11 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
             if (System.getenv("CI") == "true" || batch == "true") {
                 // If it is running in a Continuous Integration environment, use the "headless" mode of the simulator
                 // Namely, force the simulator not to use graphical output.
-                args("--override",
+                args(
+
+                    "--override",
+                    "terminate: { type: AfterTime, parameters: [$maxTime] }",
+                    "--override",
                     """
                     launcher: {
                         parameters: {
@@ -74,10 +78,8 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
                             autoStart: true,
                             parallelism: 1,
                         }
-                    },
-                """.trimIndent(),
-                    "--override",
-                    "terminate: { type: AfterTime, parameters: [$maxTime] }")
+                    }
+                """.trimIndent())
             } else {
                 // A graphics environment should be available, so load the effects for the UI from the "effects" folder
                 // Effects are expected to be named after the simulation file
@@ -86,6 +88,8 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
                     "monitors: { type: SwingGUI, parameters: { graphics: effects/${it.nameWithoutExtension}.json } }",
                     "--override",
                     "launcher: { parameters: { batch: [], autoStart: false } }",
+                    "--override",
+                    "terminate: { type: AfterTime, parameters: [$maxTime] }"
                 )
             }
             // This tells gradle that this task may modify the content of the export directory
