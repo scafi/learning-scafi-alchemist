@@ -1,4 +1,5 @@
 {
+  "name": "learning-scafi-alchemist",
   "devDependencies": {
     "semantic-release-preconfigured-conventional-commits": "1.1.93"
   },
