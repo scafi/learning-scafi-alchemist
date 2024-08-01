@@ -42,7 +42,7 @@ jobs:
       - name: Produce plots
         run: python plotter.py plots/helloScafi.yml ./build/exports/helloScafi ".*" "result" plots/
   UpdateDoc:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.7
@@ -53,11 +53,43 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "docs: autoupdate readme from scripts changes"
-  ci-success:
-    runs-on: ubuntu-latest
+  release:
+    permissions:
+      contents: write
+      packages: write
+      issues: write
+    concurrency:
+      # Only one release job at a time. Strictly sequential.
+      group: release
+      cancel-in-progress: false
     needs:
       - Build
       - UpdateDoc
+    runs-on: ubuntu-22.04
+    if: >-
+      !github.event.repository.fork
+      && (
+        github.event_name != 'pull_request'
+        || github.event.pull_request.head.repo.full_name == github.repository
+      )
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7
+      - name: Install Node
+        uses: actions/setup-node@v4.0.3
+        with:
+          node-version-file: package.json
+      - run: |
+          npm install
+          npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+  success:
+    runs-on: ubuntu-22.04
+    needs:
+      - Build
+      - UpdateDoc
+      - release
     if: >-
       always() && (
         contains(join(needs.*.result, ','), 'failure')
