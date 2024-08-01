@@ -20,3 +20,4 @@ target
 
 .sims
 venv
+node_modules/
