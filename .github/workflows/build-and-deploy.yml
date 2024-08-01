@@ -57,6 +57,7 @@ jobs:
     permissions:
       contents: write
       packages: write
+      issues: write
     concurrency:
       # Only one release job at a time. Strictly sequential.
       group: release
