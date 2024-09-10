@@ -1,7 +1,7 @@
 {
   "name": "learning-scafi-alchemist",
   "devDependencies": {
-    "semantic-release-preconfigured-conventional-commits": "1.1.103"
+    "semantic-release-preconfigured-conventional-commits": "1.1.104"
   },
   "engines": {
     "node": "20.17",
