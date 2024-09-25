@@ -28,7 +28,7 @@ jobs:
     steps:
       # Checkout the repository
       - name: Checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
       - name: Check the simulations on CI
         uses: DanySK/build-check-deploy-gradle-action@3.5.7
         with:
@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
         with:
           ref: ${{ github.head_ref }}
       - name: Update readme
@@ -74,7 +74,7 @@ jobs:
       )
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
       - name: Install Node
         uses: actions/setup-node@v4.0.4
         with:
