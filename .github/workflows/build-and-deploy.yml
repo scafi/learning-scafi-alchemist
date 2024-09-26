@@ -42,7 +42,7 @@ jobs:
       - name: Produce plots
         run: python plotter.py plots/helloScafi.yml ./build/exports/helloScafi ".*" "result" plots/
   UpdateDoc:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.0
@@ -65,7 +65,7 @@ jobs:
     needs:
       - Build
       - UpdateDoc
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     if: >-
       !github.event.repository.fork
       && (
@@ -85,7 +85,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
   success:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
       - Build
       - UpdateDoc
