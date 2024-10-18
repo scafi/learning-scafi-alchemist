@@ -2,7 +2,7 @@ cycler==0.12.1
 kiwisolver==1.4.7
 matplotlib==3.9.2
 numpy==2.1.2
-Pillow==10.4.0
+Pillow==11.0.0
 pyparsing==3.2.0
 python-dateutil==2.9.0.post0
 ruamel.yaml==0.17.40
