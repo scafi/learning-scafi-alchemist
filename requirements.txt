@@ -6,5 +6,5 @@ Pillow==11.0.0
 pyparsing==3.2.0
 python-dateutil==2.9.0.post0
 ruamel.yaml==0.17.40
-ruamel.yaml.clib==0.2.8
+ruamel.yaml.clib==0.2.12
 six==1.16.0
