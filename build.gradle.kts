@@ -43,7 +43,7 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
         val task by tasks.register<JavaExec>("run${it.nameWithoutExtension.capitalize()}") {
             group = alchemistGroup // This is for better organization when running ./gradlew tasks
             description = "Launches simulation ${it.nameWithoutExtension}" // Just documentation
-            main = "it.unibo.alchemist.Alchemist" // The class to launch
+            mainClass.set("it.unibo.alchemist.Alchemist") // The class to launch
             classpath = sourceSets["main"].runtimeClasspath // The classpath to use
             // In case our simulation produces data, we write it in the following folder:
             val exportsDir = File("${projectDir.path}/build/exports/${it.nameWithoutExtension}")
