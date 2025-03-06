@@ -7,4 +7,4 @@ pyparsing==3.2.1
 python-dateutil==2.9.0.post0
 ruamel.yaml==0.18.10
 ruamel.yaml.clib==0.2.12
-six==1.16.0
+six==1.17.0
