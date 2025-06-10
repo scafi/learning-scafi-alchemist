@@ -1,7 +1,7 @@
 cycler==0.12.1
 kiwisolver==1.4.8
 matplotlib==3.10.3
-numpy==2.2.6
+numpy==2.3.0
 Pillow==11.2.1
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
