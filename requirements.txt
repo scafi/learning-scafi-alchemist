@@ -1,6 +1,6 @@
 cycler==0.12.1
 kiwisolver==1.4.9
-matplotlib==3.10.6
+matplotlib==3.10.7
 numpy==2.3.3
 Pillow==11.3.0
 pyparsing==3.2.5
