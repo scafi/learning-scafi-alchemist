@@ -3,7 +3,7 @@ kiwisolver==1.5.1
 matplotlib==3.11.2
 numpy==2.5.3
 Pillow==12.3.0
-pyparsing==3.3.2
+pyparsing==3.3.3
 python-dateutil==2.9.0.post0
 ruamel.yaml==0.19.1
 ruamel.yaml.clib==0.2.15
