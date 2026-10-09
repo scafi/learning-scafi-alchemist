@@ -3,6 +3,8 @@ package it.unibo.scafi.utils
 import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist._
 import it.unibo.scafi.space.{Point2D, Point3D}
 
+import scala.language.implicitConversions
+
 trait MovementUtils {
   self: AggregateProgram with StandardSensors with ScafiAlchemistSupport =>
 
@@ -12,8 +14,7 @@ trait MovementUtils {
   }
 
   def cropRectangle(goal: Point2D, rect1: Point2D, rect2: Point2D): Point2D = {
-    Point2D(if(goal.x < rect1.x) rect1.x else if(goal.x > rect2.x) rect2.x else goal.x,
-      if(goal.y < rect1.y) rect1.y else if(goal.y > rect2.x) rect2.y else goal.y)
+    Point2D(goal.x.max(rect1.x).min(rect2.x), goal.y.max(rect1.y).min(rect2.y))
   }
 
   def randomPoint(p: Point3D = currentPosition(), maxStep: Double = 25): Point2D = {

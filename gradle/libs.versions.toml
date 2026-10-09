@@ -1,12 +1,14 @@
 [versions]
 alchemist = "43.1.5"
+scafi = "1.8.0"
 
 [libraries]
 alchemist = { module = "it.unibo.alchemist:alchemist", version.ref = "alchemist" }
 alchemist-swingui = { module = "it.unibo.alchemist:alchemist-swingui", version.ref = "alchemist" }
-alchemist-incarnation-scafi = { module = "it.unibo.alchemist:alchemist-incarnation-scafi", version.ref = "alchemist"}
+alchemist-incarnation-scafi = { module = "it.unibo.alchemist:alchemist-incarnation-scafi", version.ref = "alchemist" }
+scafi-core = { module = "it.unibo.scafi:scafi-core_2.13", version.ref = "scafi" }
 [bundles]
-alchemist = ["alchemist", "alchemist-incarnation-scafi", "alchemist-swingui"]
+alchemist = ["alchemist", "alchemist-incarnation-scafi", "alchemist-swingui", "scafi-core"]
 
 [plugins]
 multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:4.5.10"

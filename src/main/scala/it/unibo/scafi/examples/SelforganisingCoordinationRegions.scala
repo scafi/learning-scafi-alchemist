@@ -24,8 +24,9 @@ class SelforganisingCoordinationRegions extends AggregateProgram with StandardSe
     // Just let every node export some data
     node.put(Exports.LEADER, if(leader) 1 else 0)
     node.put(Exports.GRADIENT, g)
-    node.put(Exports.INCLUDED, if(leader) 1 else info.contains(mid()))
+    node.put(Exports.INCLUDED, if(leader || info.contains(mid())) 1 else 0)
     node.put(Exports.COUNT, if(leader) c.size else 0)
+    // Non-short-circuit `&`: both nbr must always be evaluated to keep the computation aligned
     node.put(Exports.ISSUES, excludingSelf.anyHood(nbr { head } == head & nbr { info } != info))
   }
 

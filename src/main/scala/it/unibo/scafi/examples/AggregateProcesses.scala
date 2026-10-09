@@ -21,10 +21,10 @@ class AggregateProcesses extends AggregateProgram
     val pids: Set[Pid] = procs.filter(tgen => tgen.device == mid() && t > tgen.startTime && (t - 5) < tgen.startTime)
       .map(tgen => Pid(time = tgen.startTime)(terminateAt = tgen.endTime))
 
-    val maps = sspawn[Pid,Unit,Double](process, pids, {})
+    val maps = sspawn[Pid,Unit,Double](process, pids, ())
 
     if(maps.nonEmpty) {
-      node.put(EXPORT_PID, Math.abs(maps.maxBy(_._1.time)._1.hashCode()) % 100)
+      node.put(EXPORT_PID, Math.floorMod(maps.maxBy(_._1.time)._1.hashCode(), 100))
       node.put(EXPORT_G, maps.maxBy(_._1.time)._2)
     } else {
       removeMolecule(EXPORT_PID)
@@ -60,6 +60,6 @@ object AggregateProcesses {
 
   case class ProcessSpec(startTime: Int, device: Int, endTime: Int)
   object ProcessSpec {
-    implicit def fromTuple(time: Int, details: (Int,Int)) = ProcessSpec(time, details._1, details._2)
+    def fromTuple(time: Int, details: (Int,Int)): ProcessSpec = ProcessSpec(time, details._1, details._2)
   }
 }

@@ -312,7 +312,7 @@ To start the process, you can use the `spawn` operators (and their variation, `s
 
 <!-- embedme ./src/main/scala/it/unibo/scafi/examples/AggregateProcesses.scala#L24-L24 -->
 ```scala
-val maps = sspawn[Pid,Unit,Double](process, pids, {})
+val maps = sspawn[Pid,Unit,Double](process, pids, ())
 ```
 
 Particularly, `sspawn` accepts:
