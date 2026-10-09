@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.multiJvmTesting) // Pre-configures the Java toolchains
     alias(libs.plugins.taskTree) // Helps debugging dependencies among gradle tasks
     scala
+    alias(libs.plugins.kotlin.jvm)
 }
 
 repositories {
@@ -15,6 +16,7 @@ repositories {
 dependencies {
     // Check the catalog at gradle/libs.versions.gradle
     implementation(libs.bundles.alchemist)
+    implementation(libs.bundles.alchemist.kotlin.dsl)
 }
 
 multiJvm {
@@ -79,6 +81,29 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
         // task.dependsOn(classpathJar) // Uncomment to switch to jar-based classpath resolution
         runAll.dependsOn(task)
     }
+
+/*
+ * Same simulations, defined through the Alchemist Kotlin DSL (src/main/kotlin).
+ */
+val runAllKotlin by tasks.register<DefaultTask>("runAllKotlin") {
+    group = alchemistGroup
+    description = "Launches all Kotlin DSL simulations"
+}
+listOf("aggregateProcesses", "helloScafi", "selforgCoordRegions").forEach { name ->
+    val task by tasks.register<JavaExec>("run${name.capitalized()}Kotlin") {
+        group = alchemistGroup
+        description = "Launches the Kotlin DSL simulation $name"
+        mainClass.set("it.unibo.scafi.simulations.LaunchKt")
+        classpath = sourceSets["main"].runtimeClasspath
+        javaLauncher.set(
+            javaToolchains.launcherFor {
+                languageVersion.set(JavaLanguageVersion.of(17))
+            },
+        )
+        args(name, System.getenv("CI") == "true" || batch == "true", maxTime)
+    }
+    runAllKotlin.dependsOn(task)
+}
 
 tasks.withType<Tar>().configureEach {
     duplicatesStrategy = DuplicatesStrategy.WARN

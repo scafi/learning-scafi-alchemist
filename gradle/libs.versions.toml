@@ -1,15 +1,25 @@
 [versions]
 alchemist = "43.1.5"
 scafi = "1.8.0"
+kotlin = "2.4.20"
 
 [libraries]
 alchemist = { module = "it.unibo.alchemist:alchemist", version.ref = "alchemist" }
 alchemist-swingui = { module = "it.unibo.alchemist:alchemist-swingui", version.ref = "alchemist" }
 alchemist-incarnation-scafi = { module = "it.unibo.alchemist:alchemist-incarnation-scafi", version.ref = "alchemist" }
+alchemist-api = { module = "it.unibo.alchemist:alchemist-api", version.ref = "alchemist" }
+alchemist-cognitive-agents = { module = "it.unibo.alchemist:alchemist-cognitive-agents", version.ref = "alchemist" }
+alchemist-euclidean-geometry = { module = "it.unibo.alchemist:alchemist-euclidean-geometry", version.ref = "alchemist" }
+alchemist-implementationbase = { module = "it.unibo.alchemist:alchemist-implementationbase", version.ref = "alchemist" }
+alchemist-loading = { module = "it.unibo.alchemist:alchemist-loading", version.ref = "alchemist" }
+alchemist-maps = { module = "it.unibo.alchemist:alchemist-maps", version.ref = "alchemist" }
 scafi-core = { module = "it.unibo.scafi:scafi-core_2.13", version.ref = "scafi" }
 [bundles]
 alchemist = ["alchemist", "alchemist-incarnation-scafi", "alchemist-swingui", "scafi-core"]
+# Modules referenced directly by the Kotlin DSL simulations
+alchemist-kotlin-dsl = ["alchemist-api", "alchemist-cognitive-agents", "alchemist-euclidean-geometry", "alchemist-implementationbase", "alchemist-loading", "alchemist-maps"]
 
 [plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 multiJvmTesting = "org.danilopianini.multi-jvm-test-plugin:4.5.10"
 taskTree = "com.dorongold.task-tree:4.0.2"
