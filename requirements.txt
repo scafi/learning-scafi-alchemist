@@ -4,7 +4,7 @@ matplotlib==3.11.2
 numpy==2.5.4
 Pillow==13.0.0
 pyparsing==3.3.3
-python-dateutil==2.9.0.post0
+python-dateutil==3.0.0
 ruamel.yaml==0.19.1
 ruamel.yaml.clib==0.2.15
 six==1.17.0
